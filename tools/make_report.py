@@ -145,7 +145,7 @@ EVENTS = [
                 "இது சங்கத்தின் மாதாந்திரப் பதிவில் இடம்பெறுகிறது.",
             ],
             "en": [
-                "Niladhamma group members Tharagai and Siva Samraj took part "
+                "Niladhamma group members Tharagai and Siva Samraj S took part "
                 "in the anti-NEET protest held by the Neelam Students "
                 "Movement (NSM).",
                 "The examination paper leak, the demand that NEET be scrapped, "
@@ -159,7 +159,7 @@ EVENTS = [
         },
         "people": [
             {"ta": "தாரகை", "en": "Tharagai"},
-            {"ta": "சிவ சாம்ராஜ்", "en": "Siva Samraj"},
+            {"ta": "சிவ சாம்ராஜ்", "en": "Siva Samraj S"},
         ],
         "photos": [
             {"src": "img/neet-speech.jpg", "w": 1050, "h": 1400,
