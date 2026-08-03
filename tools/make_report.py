@@ -113,17 +113,17 @@ EVENTS = [
     },
     {
         "date": "2026-07-19",
-        "ta": "தந்தை",
-        "en": "Father",
+        "ta": "அருட்தந்தை ஜான் சுரேஷ் நிகழ்வு",
+        "en": "Programme for Father John Suresh",
         "kind": {"ta": "நிகழ்வு", "en": "Programme"},
-        "pending": True,
         "body": {
-            "ta": ["இந்த நிகழ்வின் முழுத் தலைப்பும் விவரமும் இன்னும் "
-                   "உறுதி செய்யப்படவில்லை. தளத்தின் பதிவுத் தொகுப்பிலும் "
-                   "இதற்கான பதிவு இல்லை."],
-            "en": ["The full title and description of this programme are not "
-                   "yet confirmed, and the site's archive carries no post for "
-                   "it either."],
+            "ta": ["சிறுசேரி மகிழ்ச்சி இல்லத்தில் நடைபெற்ற நிகழ்வு. "
+                   "நிலாதம்மாக் குழுவினர் அனைவரும் கலந்துகொண்டனர்.",
+                   "இம்மாதத்தில் தளத்தில் பதிவாகாத ஒரே நிகழ்வு இதுவே."],
+            "en": ["A programme held at Magizhchi Illam in Siruseri. Every "
+                   "member of the Niladhamma group took part.",
+                   "This is the one event of the month that was not written up "
+                   "on the site."],
         },
     },
     {
