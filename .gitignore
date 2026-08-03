@@ -25,3 +25,8 @@ __pycache__/
 # One-off exports. Committing these would publish them at the site root; if a
 # PDF should be downloadable, generate it into assets/ and link to it instead.
 /dana-*.pdf
+
+# Reports: the generator and the photographs are source; the rendered
+# document is not, for the same reason the site's pages are not.
+/reports/*.html
+/reports/*.pdf
