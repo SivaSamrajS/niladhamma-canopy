@@ -119,11 +119,53 @@ EVENTS = [
         "body": {
             "ta": ["சிறுசேரி மகிழ்ச்சி இல்லத்தில் நடைபெற்ற நிகழ்வு. "
                    "நிலாதம்மாக் குழுவினர் அனைவரும் கலந்துகொண்டனர்.",
-                   "இம்மாதத்தில் தளத்தில் பதிவாகாத ஒரே நிகழ்வு இதுவே."],
+                   "கத்தோலிக்க அருட்தந்தையாக இருந்தபோதும், பௌத்தக் "
+                   "கோட்பாடுகளின் மதிப்பைப் பொதுவெளியில் பேசியவர். "
+                   "சென்னையில் பௌத்தத் துறவிகளுடனும் சமூகச் "
+                   "செயற்பாட்டாளர்களுடனும் இணைந்து நிகழ்வுகளில் "
+                   "பங்கேற்றார். சமூக நல்லிணக்கத்திற்குப் பௌத்த "
+                   "அடிப்படைகள் தேவை என்றும், அரசியலையும் மதத்தையும் "
+                   "கலப்பது ஆபத்து என்றும் சொன்னவர். ஒரு பௌத்தச் சங்கம் "
+                   "அவருக்கான நிகழ்வை நடத்தியதற்கான காரணம் இதுவே.",
+                   "அருட்தந்தை பி. ஜான் சுரேஷ் ஆசிரியராகவும், "
+                   "எழுத்தாளராகவும், சமூகச் செயற்பாட்டாளராகவும் "
+                   "இருந்தவர். தெருக்கூத்துப் பயிற்சி மூலம் கிராமத்து "
+                   "இளையோரைத் திரட்டி மேடையேற்றியவர்; "
+                   "&ldquo;மண்ணுக்குத் திரும்புவோம்&rdquo; என்னும் "
+                   "கவிதைத் தொகுப்பை எழுதியவர்.",
+                   "ஒடுக்கப்பட்ட மக்களின் உரிமைக்காகவும், ஏழை "
+                   "மாணவர்களின் கல்விக்காகவும் பணியாற்றியவர். அவரிடம் "
+                   "பயின்ற மாணவர்கள் பலர் பொதுப்பணிக்குச் "
+                   "சென்றுள்ளனர்."],
             "en": ["A programme held at Magizhchi Illam in Siruseri. Every "
                    "member of the Niladhamma group took part.",
-                   "This is the one event of the month that was not written up "
-                   "on the site."],
+                   "Though a Catholic priest, he spoke publicly for the worth "
+                   "of Buddhist principles. He took part in gatherings in "
+                   "Chennai alongside Buddhist monks and others working in the "
+                   "social field, holding that a society needs those "
+                   "principles for its harmony, and warning against the "
+                   "mixing of politics with religion. That is the reason a "
+                   "Buddhist sangha held a programme for him.",
+                   "Father B. John Suresh was a teacher, a writer and a social "
+                   "worker. He gathered village young people through street "
+                   "theatre training and put them on a stage, and he wrote a "
+                   "collection of poems, &ldquo;Mannukku Thirumbuvom&rdquo;, "
+                   "let us return to the earth.",
+                   "He worked for the rights of oppressed people and for the "
+                   "schooling of poor children, and many who studied under him "
+                   "went into public service."],
+        },
+        # Everything above the first line rests on one article that is no
+        # longer reachable, so the report says so rather than presenting it
+        # with the same standing as the events the archive recorded.
+        "caveat": {
+            "ta": "அருட்தந்தை பற்றிய குறிப்புகள் &ldquo;கலகம்&rdquo; "
+                  "இணையதளத்தில் வெளியான ஒரே கட்டுரையிலிருந்து "
+                  "பெறப்பட்டவை; அத்தளம் இப்போது இயங்கவில்லை. சங்கம் "
+                  "இவற்றை உறுதி செய்ய வேண்டும்.",
+            "en": "The account of Father John Suresh comes from a single "
+                  "article on the Kalakam website, which is no longer online. "
+                  "It is set down here for the sangha to confirm.",
         },
     },
     {
@@ -358,6 +400,8 @@ def event_block(ev, L):
             f"{esc(post_title(s, L))}</a>" for s in ev["posts"])
         extra += (f'<p class="rp-meta"><strong>{U("recorded", L)}:</strong> '
                   f"{links}</p>")
+    if ev.get("caveat"):
+        extra += (f'<p class="rp-caveat">{ev["caveat"][L]}</p>')
 
     shots = event_photos(ev)
     gallery = ""
@@ -473,6 +517,11 @@ def build(L):
   .rp-prog li {{ font-size: 15px; line-height: 1.7; margin-bottom: 5px; }}
   .rp-prog em {{ font-style: normal; margin-inline-start: 8px; font-size: 12px;
                  color: var(--cm-text-muted); }}
+  /* A claim the report could not check, marked as such rather than set in the
+     same type as the things the archive recorded. */
+  .rp-caveat {{ font-size: 13px !important; line-height: 1.6 !important;
+                color: var(--cm-text-muted) !important; margin-top: 12px !important;
+                padding-left: 11px; border-left: 2px solid var(--cm-border-strong); }}
   .rp-meta {{ font-size: 14px !important; color: var(--cm-text-muted) !important; }}
   .rp-meta strong {{ color: var(--cm-text-body); }}
   .rp-meta a {{ color: var(--cm-text-accent); }}
