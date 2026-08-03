@@ -1,0 +1,61 @@
+# Niladhamma · Netlify configuration
+#
+# The Dhamma story collections are released a day at a time. This is a static
+# site, so there is no server to check the date at request time: the site is
+# rebuilt every morning and the build decides what exists. See
+# .github/workflows/daily-build.yml for the schedule that triggers it.
+
+[build]
+  command = "python3 build.py && python3 tools/seo_audit.py"
+  publish = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.12"
+  # Netlify builds in UTC. build.py converts to Asia/Kolkata itself, so a story
+  # is never released early; this is set only so logs read in local time.
+  TZ = "Asia/Kolkata"
+
+# Canonical host. Without this, the site answers on both the apex and www and
+# every canonical URL points at only one of them.
+[[redirects]]
+  from = "https://niladhamma.co.in/*"
+  to = "https://www.niladhamma.co.in/:splat"
+  status = 301
+  force = true
+
+# index.html is not a URL on this site; the canonical form is the directory.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/en/index.html"
+  to = "/en/"
+  status = 301
+
+# A story that has not been released yet does not exist. Netlify serves 404.html
+# for the Tamil tree and the English one gets its own.
+[[redirects]]
+  from = "/en/*"
+  to = "/en/404.html"
+  status = 404
+
+# The calendar feed changes daily and is meant to be subscribed to.
+[[headers]]
+  for = "/*.ics"
+  [headers.values]
+    Content-Type = "text/calendar; charset=utf-8"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    # Pages change daily, so they must revalidate rather than sit in a cache.
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

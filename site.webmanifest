@@ -1,0 +1,14 @@
+{
+  "name": "நிலாதம்மா · Niladhamma",
+  "short_name": "நிலாதம்மா",
+  "description": "தமிழ்நாட்டில் பௌத்த வாழ்வியலையும் பண்பாட்டையும் மீட்டுருவாக்கும் சங்கம்.",
+  "lang": "ta",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0c7a43",
+  "icons": [
+    { "src": "assets/img/logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/img/logo-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

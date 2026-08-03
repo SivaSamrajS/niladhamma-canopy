@@ -1,0 +1,27 @@
+# Generated pages.
+#
+# Netlify runs `python3 build.py` on every deploy and the release gate decides
+# what exists on the day it runs. Committing the output would freeze a
+# date-gated site at whatever date it was last built on, and the repository
+# would disagree with the site every morning.
+#
+# Anchored to the root on purpose: /pathivu/ is generated HTML, while
+# assets/img/pathivu/ is the photographs and is committed.
+/*.html
+/en/
+/kathai/
+/pathivu/
+/sitemap.xml
+/robots.txt
+/niladhamma.ics
+
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# One-off exports. Committing these would publish them at the site root; if a
+# PDF should be downloadable, generate it into assets/ and link to it instead.
+/dana-*.pdf

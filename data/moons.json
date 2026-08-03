@@ -1,0 +1,236 @@
+{
+ "generated_for": [
+  2026,
+  2028
+ ],
+ "moons": [
+  {
+   "date": "2026-01-03",
+   "time_ist": "15:34",
+   "label_ta": "3 ஜனவரி 2026",
+   "label_en": "3 January 2026"
+  },
+  {
+   "date": "2026-02-02",
+   "time_ist": "03:40",
+   "label_ta": "2 பிப்ரவரி 2026",
+   "label_en": "2 February 2026"
+  },
+  {
+   "date": "2026-03-03",
+   "time_ist": "17:09",
+   "label_ta": "3 மார்ச் 2026",
+   "label_en": "3 March 2026"
+  },
+  {
+   "date": "2026-04-02",
+   "time_ist": "07:43",
+   "label_ta": "2 ஏப்ரல் 2026",
+   "label_en": "2 April 2026"
+  },
+  {
+   "date": "2026-05-01",
+   "time_ist": "22:54",
+   "label_ta": "1 மே 2026",
+   "label_en": "1 May 2026"
+  },
+  {
+   "date": "2026-05-31",
+   "time_ist": "14:16",
+   "label_ta": "31 மே 2026",
+   "label_en": "31 May 2026"
+  },
+  {
+   "date": "2026-06-30",
+   "time_ist": "05:27",
+   "label_ta": "30 ஜூன் 2026",
+   "label_en": "30 June 2026"
+  },
+  {
+   "date": "2026-07-29",
+   "time_ist": "20:06",
+   "label_ta": "29 ஜூலை 2026",
+   "label_en": "29 July 2026"
+  },
+  {
+   "date": "2026-08-28",
+   "time_ist": "09:49",
+   "label_ta": "28 ஆகஸ்ட் 2026",
+   "label_en": "28 August 2026"
+  },
+  {
+   "date": "2026-09-26",
+   "time_ist": "22:19",
+   "label_ta": "26 செப்டம்பர் 2026",
+   "label_en": "26 September 2026"
+  },
+  {
+   "date": "2026-10-26",
+   "time_ist": "09:42",
+   "label_ta": "26 அக்டோபர் 2026",
+   "label_en": "26 October 2026"
+  },
+  {
+   "date": "2026-11-24",
+   "time_ist": "20:24",
+   "label_ta": "24 நவம்பர் 2026",
+   "label_en": "24 November 2026"
+  },
+  {
+   "date": "2026-12-24",
+   "time_ist": "06:59",
+   "label_ta": "24 டிசம்பர் 2026",
+   "label_en": "24 December 2026"
+  },
+  {
+   "date": "2027-01-22",
+   "time_ist": "17:48",
+   "label_ta": "22 ஜனவரி 2027",
+   "label_en": "22 January 2027"
+  },
+  {
+   "date": "2027-02-21",
+   "time_ist": "04:54",
+   "label_ta": "21 பிப்ரவரி 2027",
+   "label_en": "21 February 2027"
+  },
+  {
+   "date": "2027-03-22",
+   "time_ist": "16:14",
+   "label_ta": "22 மார்ச் 2027",
+   "label_en": "22 March 2027"
+  },
+  {
+   "date": "2027-04-21",
+   "time_ist": "03:58",
+   "label_ta": "21 ஏப்ரல் 2027",
+   "label_en": "21 April 2027"
+  },
+  {
+   "date": "2027-05-20",
+   "time_ist": "16:30",
+   "label_ta": "20 மே 2027",
+   "label_en": "20 May 2027"
+  },
+  {
+   "date": "2027-06-19",
+   "time_ist": "06:15",
+   "label_ta": "19 ஜூன் 2027",
+   "label_en": "19 June 2027"
+  },
+  {
+   "date": "2027-07-18",
+   "time_ist": "21:16",
+   "label_ta": "18 ஜூலை 2027",
+   "label_en": "18 July 2027"
+  },
+  {
+   "date": "2027-08-17",
+   "time_ist": "12:59",
+   "label_ta": "17 ஆகஸ்ட் 2027",
+   "label_en": "17 August 2027"
+  },
+  {
+   "date": "2027-09-16",
+   "time_ist": "04:34",
+   "label_ta": "16 செப்டம்பர் 2027",
+   "label_en": "16 September 2027"
+  },
+  {
+   "date": "2027-10-15",
+   "time_ist": "19:18",
+   "label_ta": "15 அக்டோபர் 2027",
+   "label_en": "15 October 2027"
+  },
+  {
+   "date": "2027-11-14",
+   "time_ist": "08:57",
+   "label_ta": "14 நவம்பர் 2027",
+   "label_en": "14 November 2027"
+  },
+  {
+   "date": "2027-12-13",
+   "time_ist": "21:40",
+   "label_ta": "13 டிசம்பர் 2027",
+   "label_en": "13 December 2027"
+  },
+  {
+   "date": "2028-01-12",
+   "time_ist": "09:34",
+   "label_ta": "12 ஜனவரி 2028",
+   "label_en": "12 January 2028"
+  },
+  {
+   "date": "2028-02-10",
+   "time_ist": "20:34",
+   "label_ta": "10 பிப்ரவரி 2028",
+   "label_en": "10 February 2028"
+  },
+  {
+   "date": "2028-03-11",
+   "time_ist": "06:37",
+   "label_ta": "11 மார்ச் 2028",
+   "label_en": "11 March 2028"
+  },
+  {
+   "date": "2028-04-09",
+   "time_ist": "15:57",
+   "label_ta": "9 ஏப்ரல் 2028",
+   "label_en": "9 April 2028"
+  },
+  {
+   "date": "2028-05-09",
+   "time_ist": "01:20",
+   "label_ta": "9 மே 2028",
+   "label_en": "9 May 2028"
+  },
+  {
+   "date": "2028-06-07",
+   "time_ist": "11:40",
+   "label_ta": "7 ஜூன் 2028",
+   "label_en": "7 June 2028"
+  },
+  {
+   "date": "2028-07-06",
+   "time_ist": "23:42",
+   "label_ta": "6 ஜூலை 2028",
+   "label_en": "6 July 2028"
+  },
+  {
+   "date": "2028-08-05",
+   "time_ist": "13:41",
+   "label_ta": "5 ஆகஸ்ட் 2028",
+   "label_en": "5 August 2028"
+  },
+  {
+   "date": "2028-09-04",
+   "time_ist": "05:18",
+   "label_ta": "4 செப்டம்பர் 2028",
+   "label_en": "4 September 2028"
+  },
+  {
+   "date": "2028-10-03",
+   "time_ist": "21:56",
+   "label_ta": "3 அக்டோபர் 2028",
+   "label_en": "3 October 2028"
+  },
+  {
+   "date": "2028-11-02",
+   "time_ist": "14:48",
+   "label_ta": "2 நவம்பர் 2028",
+   "label_en": "2 November 2028"
+  },
+  {
+   "date": "2028-12-02",
+   "time_ist": "07:11",
+   "label_ta": "2 டிசம்பர் 2028",
+   "label_en": "2 December 2028"
+  },
+  {
+   "date": "2028-12-31",
+   "time_ist": "22:19",
+   "label_ta": "31 டிசம்பர் 2028",
+   "label_en": "31 December 2028"
+  }
+ ]
+}

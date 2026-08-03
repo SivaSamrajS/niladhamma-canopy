@@ -1,0 +1,485 @@
+{
+ "note": "English rendering of தம்மபதம்: முப்பத்தோர் நாள் | இரண்டாம் மாதம். The Tamil is the authoritative text; this translation is for readers who do not read Tamil and should be reviewed by the sangha before it is treated as official.",
+ "intro": [
+  "Introduction",
+  "Dear brothers and sisters,",
+  "Last month we finished a journey. Beginning with Sumedha's vow, we walked through the life of the Buddha, his disciples, Mahapajapati, Ashoka, and at the last our own Babasaheb. Thank you for listening patiently through those thirty one days, and for asking questions that taught me as well.",
+  "In July we looked at who. This August we are going to look at what. That is, at what the Dhamma says the way is.",
+  "The first four days are the four noble truths. The next eight days are the eight paths, one path a day. Then the five precepts, and the four brahma viharas. In the last week, the Buddha's words on society: what he said to the Kalamas, what he said to Sigala, what he said about the Vajjis. To close, the Dhamma of our own soil: Manimekalai, Pandithar Iyothee Thass, and Ambedkar's twenty two vows.",
+  "But these are not lessons. Each day is a story. The Buddha did not speak philosophy; he told stories, he gave similes, he asked questions. I will try to tell it the same way.",
+  "By the end of this month I hope it will be clear to us that the Dhamma is not a belief but a practice.",
+  "Namo Buddhaya. Jai Bhim."
+ ],
+ "stories": {
+  "1": {
+   "title": "The First Truth: The Second Arrow",
+   "body": [
+    "In the Jeta Grove at Savatthi, the Buddha one day put a question to his disciples.",
+    "“Bhikkhus, an arrow strikes a man. It hurts. At once a second arrow comes and strikes the same place. How many pains will he feel?”",
+    "“Two, Bhagavan.”",
+    "“Good. Now I will tell you. An untrained man feels bodily pain. That is the first arrow. He does not stop there. He weeps, he beats his breast, he laments, why does this happen only to me, he grows angry, he fears the pain will never leave. That is the second arrow. Nobody shot it at him; he shoots it into himself.",
+    "“A trained man feels the same bodily pain. He feels only one arrow. He sees that there is pain, and that is all. He does not build a story around it.”",
+    "This is the first truth the Buddha taught. There is suffering. Denying it or hiding it is not the way; seeing it is the way. And he pointed out too that a part of our suffering is what we add ourselves."
+   ],
+   "insight": "Pain cannot be avoided. Multiplying it into suffering can be. The first arrow is life shooting; the second arrow is us.",
+   "ambedkar": "Ambedkar did not see suffering as a private feeling alone. Hunger, humiliation, untouchability, poverty: these did not fall from the sky, he said, they were built by human beings. What human beings built, human beings can pull down. He applied to society the Buddha's own approach: suffering has a cause, and therefore it has a remedy.",
+   "source": "Salla Sutta (Samyutta Nikaya 36.6); Dhammacakkappavattana Sutta."
+  },
+  "2": {
+   "title": "The Second Truth: For One Bean",
+   "body": [
+    "The Buddha once told, as a story, what a king had seen during a campaign.",
+    "The soldiers were camped in the forest. The horses had been given beans. A monkey came down from a tree, scooped up a handful of the beans and climbed back. As it sat down to eat, a single bean fell from its hand.",
+    "At once the monkey dropped every bean it was holding and went down after the one that had fallen. It searched below and did not find it. When it looked up, the other monkeys had carried off the beans it had thrown away. It stood there empty handed.",
+    "The king, watching this, understood something. He had been losing a great army over a small strip of border land. He turned his army round and went home.",
+    "This, said the Buddha, is craving. It will not let us enjoy what we have, and sends the mind running after what we do not have. That is the root of suffering."
+   ],
+   "insight": "The cause of suffering is craving. It is the mind that runs after more and more that makes us lose what we hold.",
+   "ambedkar": "Ambedkar often told his people: do not give up great rights for small concessions. He opposed sharply the habit of pawning one's dignity for a job or a small favour. The monkey's mistake was not greed; it was not knowing what came first.",
+   "source": "Kalaya Mutthi Jataka (Jataka 176)."
+  },
+  "3": {
+   "title": "The Third Truth: Bahiya's Run",
+   "body": [
+    "In the coastal town of Supparaka lived a man named Bahiya. Because he wore bark for clothing they called him Bahiya of the Bark Cloth. People believed he was an arahant, and at some point he began to believe it himself.",
+    "One day a doubt rose in him: am I truly liberated? A deva then said to him: “You are not an arahant. There is one in Savatthi to the north. Go to him.”",
+    "Bahiya walked hundreds of leagues without rest and reached Savatthi. The Buddha had gone out for alms. Bahiya did not wait; he went into the street itself and fell at his feet. “Bhagavan, teach me the Dhamma.”",
+    "“Bahiya, this is not the time. We are going for alms.”",
+    "Bahiya asked again. He was refused again. He asked a third time: “Bhagavan, life is uncertain. Neither you nor I know when the end will come.”",
+    "Then the Buddha stood there in the street and said, in a few lines: “Bahiya, train yourself in this way. In the seen, let there be only the seen. In the heard, only the heard. In the sensed, only the sensed. In the known, only the known. Then there is no you in it. That is the end of suffering.”",
+    "In that very place Bahiya was liberated. A little later a cow gored him and he died. The Buddha declared him foremost among those who understood quickly."
+   ],
+   "insight": "Suffering can end; that is the third truth. It does not need years, it needs complete attention.",
+   "ambedkar": "The idea that drew Ambedkar was that liberation is possible in this birth, in this soil. He rejected any doctrine that told people to wait for something better in a next life. Dignity now, here, was his demand.",
+   "source": "Bahiya Sutta (Udana 1.10); Anguttara Nikaya (Etadagga chapter)."
+  },
+  "4": {
+   "title": "The Fourth Truth: Sona's Lute",
+   "body": [
+    "Sona Kolivisa was born into a wealthy family. The soles of his feet were tender; he was not used to walking. After going forth, he thought that because he had come late he must strive all the more.",
+    "He walked and meditated night and day. The soles of his feet split and bled, and the path he walked was stained with blood. Even after all this his mind would not settle. “I have tried this hard and nothing has come of it. Better to go home and make merit with my wealth,” he decided.",
+    "The Buddha came to him and asked a single question: “Sona, when you were a householder, did you not play the lute?”",
+    "“Yes, Bhagavan.”",
+    "“If the strings are wound very tight, is the music sweet?”",
+    "“No.”",
+    "“If they are left very loose?”",
+    "“Not then either.”",
+    "“If they are even?”",
+    "“Then it is sweet, Bhagavan.”",
+    "“The Dhamma is the same. Too much effort makes the mind restless, too little brings sloth. Tune the string rightly.”",
+    "Sona found that measure, and before long he was liberated."
+   ],
+   "insight": "The way is the middle way. Drowning in pleasure is wrong, and tormenting the body is wrong. Measure is the whole art.",
+   "ambedkar": "Ambedkar's politics was also a middle way. On one side, quiet acceptance and submission; on the other, uncontrolled violence. He avoided both and chose constitution, education and organised struggle. That measure shows in the very order of the words: educate, agitate, organise.",
+   "source": "Sona Sutta (Anguttara Nikaya 6.55); Vinaya Mahavagga."
+  },
+  "5": {
+   "title": "Samma Ditthi: The Blind Men and the Elephant",
+   "body": [
+    "There were ascetics of many sects in Savatthi. Each argued that his own view alone was right, and they quarrelled in the street. The bhikkhus told the Buddha of it. He told an old story.",
+    "A king asked that some people blind from birth be brought together. He asked for an elephant to be brought as well. He had each of them touch a different part of the elephant.",
+    "Then he asked: “What is an elephant?”",
+    "The one who had touched the head said: “An elephant is like a pot.” The one who had touched the ear: “No, like a winnowing basket.” The one who had touched the tusk: “Like a ploughshare.” The one who had touched the trunk: “Like a plough pole.” The one who had touched a leg: “Like a pillar.” The one who had touched the tail: “Like a broom.”",
+    "Then they began to strike one another, saying it is like this, no it is like this. The king watched.",
+    "“Just so,” said the Buddha, “those who have touched only one part quarrel, each holding that it is the whole truth.”"
+   ],
+   "insight": "Right view is not gripping an opinion; it is knowing the limits of your own seeing. Knowing that nobody has touched the whole is where it begins.",
+   "ambedkar": "Ambedkar held that difference of opinion is the life of democracy. But he was equally firm that nobody may declare his own view the final truth. “Criticise my views too,” he said himself. His position was that no book and no leader stands beyond criticism.",
+   "source": "Tittha Sutta (Udana 6.4)."
+  },
+  "6": {
+   "title": "Samma Sankappa: Two Herds",
+   "body": [
+    "The Buddha once described what he had done before his awakening.",
+    "“Bhikkhus, I divided my thoughts into two. On one side, thoughts of desire, of ill will, of cruelty. On the other, thoughts of renunciation, of friendliness, of harmlessness.",
+    "“When the first kind arose, I did not suppress it; nor did I hate it. I saw: this harms me, this harms others, this spoils wisdom. As soon as I saw it, it fell away of itself.",
+    "“When the second kind arose I looked at it in the same way. This is good for me, this is good for others. I could spend a whole night in such thoughts; but if I thought beyond measure the body would tire and the mind would lose its calm. So I quieted that too.",
+    "“Have you seen a cowherd at harvest time? While the crop stands, he drives the cattle off with his staff so they do not get into the field. Once the harvest is in, he sits under a tree and only watches, saying, there are the cattle. I guarded my mind in the same way.”"
+   ],
+   "insight": "Suppressing thoughts is not the way; recognising them is. Whatever thought we think again and again becomes the leaning of the mind.",
+   "ambedkar": "Ambedkar's anger in his struggle was justified, but he did not let it turn into hatred. He kept the distinction: “I am against caste, not against caste Hindus.” Opposing oppression is one thing; hating human beings is another.",
+   "source": "Dvedhavitakka Sutta (Majjhima Nikaya 19)."
+  },
+  "7": {
+   "title": "Samma Vaca: Prince Abhaya's Question",
+   "body": [
+    "Nigantha Nataputta laid a plan to trap the Buddha in debate. He called Prince Abhaya and said: “Ask the Buddha a question. Would you speak words others dislike? If he says yes, what separates him from an ordinary man? If he says no, why did he speak harshly about Devadatta? He is caught either way.”",
+    "Abhaya invited the Buddha and gave him a meal. A small child was playing on his lap. Before the question could be asked, the Buddha asked one of his own:",
+    "“Prince, if through your inattention this child were to put a stick or a stone in its mouth, what would you do?”",
+    "“I would take it out at once, Bhagavan. Even if it drew blood, I would take it out. My heart holds compassion for the child.”",
+    "“Just so, prince. I pass what I say through three sieves. Is it true? Is it of use? Is this the moment to say it? If all three are yes, I will say it even if it is not sweet to the hearer. But I will say it knowingly, at the right moment. Because my heart holds compassion for living beings.”",
+    "What is false he will not say, however sweet. What is true but useless he will not say either."
+   ],
+   "insight": "Right speech is not merely pleasant speech. True, useful, and timely: right speech is the three together.",
+   "ambedkar": "Ambedkar never hesitated to say bitter truths. The words he wrote in Annihilation of Caste stung many; but they were true, and they were necessary for change. He showed by his life that blunting the truth for the sake of sweetness is not kindness.",
+   "source": "Abhayarajakumara Sutta (Majjhima Nikaya 58)."
+  },
+  "8": {
+   "title": "Samma Kammanta: The Virtue of the Kuru Country",
+   "body": [
+    "There was a famine in the Kalinga country. No rain. In the Kuru country alone the rains had not failed. “They have an auspicious elephant there; if we bring it, rain will fall for us too,” said the king of Kalinga, and he sent envoys.",
+    "The Kuru king gave the elephant. But no rain fell in Kalinga. When the envoys went back and enquired, they learned that the reason for the rain was not the elephant but the five precepts the Kuru people kept.",
+    "“Write that virtue down for us,” they asked. They went to the king. The king said: “My own virtue is not pure. Once at a festival I loosed an arrow at an animal; I was not sure whether it was an animal or a decoy made to look like one. That doubt itself is a stain. Ask my mother.”",
+    "The mother said: “My virtue is not pure either. Of my two sons I gave the good sandalwood to the elder and the lesser to the younger. That partiality is a stain.” She sent them on to the queen.",
+    "And so it went: the queen, the prince, the royal chaplain, the charioteer, a wealthy man, the land measurer, the gatekeeper, and last of all a courtesan who lived in the city. Each named some subtle fault and said, mine is not pure.",
+    "The envoys were astonished. These people grieved over faults as small as these; that was the wealth of that country."
+   ],
+   "insight": "Right action is not behaving well out of fear of the law. Virtue is the state in which the mind pricks at a small fault even when nobody is watching.",
+   "ambedkar": "The warning Ambedkar gave after finishing the Constitution was exactly this: “However good a constitution may be, if those who work it are bad, it will turn out bad.” Law restrains from outside; virtue from inside. Both are needed.",
+   "source": "Kurudhamma Jataka (Jataka 276)."
+  },
+  "9": {
+   "title": "Samma Ajiva: Two Traders",
+   "body": [
+    "In the country of Seriva there were two traders, both with the same name, Serivan. They went about selling pots and ornaments. Coming to a town, they divided the streets between them.",
+    "In one house an old woman and her granddaughter lived in poverty. The granddaughter wanted an ornament. “We have no money. There is that old pot; try offering it,” said the old woman. It was blackened with smoke; they did not know it was gold.",
+    "The first trader came. He scratched the pot and knew at once that it was gold. “This is worth nothing,” he said, threw it down and left, meaning to come back and take it for nothing.",
+    "The second trader came later. The same pot. He too saw that it was gold. But he said: “Mother, this is gold. Even if I gave you everything I have it would not equal its price.” He gave them all he had, keeping only a little for the road, took the pot and left.",
+    "When the first trader returned the pot was gone. Filled with envy and rage he gave chase; but the other had crossed the river and could not be caught.",
+    "The Buddha said: that honest trader was I."
+   ],
+   "insight": "Right livelihood does not seek profit from another's ignorance or weakness. Profit that comes by cheating is a debt; it returns with interest.",
+   "ambedkar": "One of the trades the Buddha said to avoid was trading in human beings. In Ambedkar's time, land and debt together made people into slaves. He framed labour laws against bonded labour, forced unpaid work, and caste based compulsion in occupation. The trade by which a person lives must not be one that pushes another down.",
+   "source": "Serivanija Jataka (Jataka 3); Vanijja Sutta (Anguttara Nikaya 5.177)."
+  },
+  "10": {
+   "title": "Samma Vayama: Seven Days at Sea",
+   "body": [
+    "Prince Mahajanaka of Mithila set sail for Suvarnabhumi to seek the wealth with which to win back his lost kingdom. A storm caught the ship in mid ocean. The ship broke apart. Hundreds died screaming.",
+    "Mahajanaka did not scream. Before the ship went down he ate sugar mixed with ghee, oiled his body, climbed to the top of the mast and leapt clear of the side the ship was sinking towards. Then he began to swim.",
+    "One day. Two days. He swam for seven days.",
+    "On the seventh day Manimekhala, the deva who guards the sea, saw him. She was astonished. She came down and asked:",
+    "“No shore is in sight. No direction is in sight. Nobody sees you. Why do you still move your arms?”",
+    "Mahajanaka said: “Deva, I know the way of the world, that effort is a human being's duty. That is why I swim.”",
+    "“The shore is beyond reach. The effort is useless.”",
+    "“Even knowing it is useless, there is a difference between one who dies without trying and one who dies trying. He who gives up the effort gives up its fruit as well.”",
+    "Pleased by that answer, the deva lifted him and set him on the shore."
+   ],
+   "insight": "Right effort is not striving because success is certain; it is not giving up when certainty is nowhere in sight.",
+   "ambedkar": "Ambedkar's life was that seven day swim. The Round Table Conference, the Poona Pact, electoral defeats, illness: many times no shore was in sight. He walked as though what he was leaving his people was a way, not a guarantee. Manimekhala does not come to everyone; she comes to the one still swimming.",
+   "source": "Mahajanaka Jataka (Jataka 539)."
+  },
+  "11": {
+   "title": "Samma Sati: Two on a Bamboo Pole",
+   "body": [
+    "In a place called Sedaka there was an acrobat, also called Sedaka. He had a pupil named Medakathalika. The teacher would set up a long bamboo pole and have the pupil climb onto his shoulders and stand at the top of it. The two together had to hold the balance.",
+    "One day the teacher said: “You protect me and I will protect you. That way we will finish the act and earn our money.”",
+    "The pupil said: “Not so, teacher. I will protect myself and you protect yourself. If each of us guards ourselves, both are safe; the act will finish and the money will come.”",
+    "Having told this, the Buddha said: “What she said was right.”",
+    "“By protecting oneself one protects others; by protecting others one protects oneself.",
+    "“How does one protect oneself? By being aware. By practising again and again, seeing the body as body, feeling as feeling, mind as mind, what is happening as what is happening.",
+    "“How does one protect others? By patience, by harmlessness, by loving kindness, by compassion.”"
+   ],
+   "insight": "Mindfulness is not selfishness. One who does not keep their own balance ends up a burden on others as well.",
+   "ambedkar": "“No society that does not raise itself can be raised by anyone else” was Ambedkar's position. He pressed self respect, self regard and self improvement not out of selfishness, but because only one who stands on their own feet can put out a hand to the next person.",
+   "source": "Sedaka Sutta (Samyutta Nikaya 47.19)."
+  },
+  "12": {
+   "title": "Samma Samadhi: Meghiya's Mango Grove",
+   "body": [
+    "Meghiya was at that time attending on the Buddha. Walking one day along the riverbank he came upon a very beautiful mango grove. “There could be no better place for meditation,” he thought.",
+    "He came and asked leave. “Meghiya, wait a little. I am alone just now; let someone else come.” Meghiya asked again. And again. The third time the Buddha said: “You say you must go. Go.”",
+    "Meghiya went to that lovely grove and sat down. There, in that quiet, desire and ill will and cruel thoughts rose in his mind one after another. He could not bear it. “What is this? I went forth in good faith. Why should this happen?”",
+    "He came back and told the Buddha. The Buddha said:",
+    "“Meghiya, the mind is not yet ripe. A quiet grove alone does not quiet the mind. Five supports are needed: good friends; virtue; useful conversation; sustained effort; and the wisdom that sees impermanence. With these, meditation steadies of itself.”"
+   ],
+   "insight": "A collected mind is not something a quiet place hands over. Without virtue and good companionship, meditation will not stand on its own.",
+   "ambedkar": "Ambedkar did not see the Dhamma as solitary meditation. He held the word sangha to be of the first importance: gathering together, learning together, walking together. What the Buddha said to Ananda, that good companionship is not half of the holy life but the whole of it, Ambedkar turned into organisation.",
+   "source": "Meghiya Sutta (Udana 4.1); Anguttara Nikaya 9.3."
+  },
+  "13": {
+   "title": "The First Precept: The Banyan Deer",
+   "body": [
+    "The king of Varanasi was passionate about hunting. Because he took the people out to hunt every day, the work of the town came to a stop. So the people drove the forest deer into the palace park and shut them in. There were two herds; the leader of one was the golden Banyan deer, Nigrodha, and of the other, Sakha.",
+    "Every day a deer was killed by an arrow. In the driving, many deer were wounded. So the two leaders came to an arrangement: each day one deer would go of its own accord and lay down its neck, and the rest would not be hurt. The turn would pass from one to another.",
+    "One day, in Sakha's herd, the turn fell to a pregnant doe. She went to Sakha and asked: “Take my turn after my fawn is born. Just now there are two lives. Please change the order.”",
+    "“A turn is a turn,” said Sakha, and refused.",
+    "She came to Nigrodha. He listened, was silent, and then said: “Go. Your turn is changed.”",
+    "That day the golden deer went himself and lay down with his head on the block. The king came with his bow and saw him. “I granted you exemption. Why are you lying here?”",
+    "“King, it was the turn of a pregnant doe. My heart would not let me send another in her place. I am the only one I can send.”",
+    "The king lowered his bow. “I have not found compassion like yours even among human beings. Safety to you and to her.”",
+    "“And the other deer?” “To them as well.” “The wild animals?” “To them as well.” “The birds? The creatures of the water?” “To all.”",
+    "From that day, freedom from fear was proclaimed in that country."
+   ],
+   "insight": "Not killing is not mere abstention; it is the capacity to put yourself in the place of another life.",
+   "ambedkar": "What Nigrodha did was the act of a leader: to put himself in the place of the one harmed and to take the burden himself. Even when Ambedkar could have moved towards high office, he turned back towards the turn of the most oppressed. Power is not a privilege but a responsibility.",
+   "source": "Nigrodhamiga Jataka (Jataka 12)."
+  },
+  "14": {
+   "title": "The Second Precept: The Scent of the Lotus",
+   "body": [
+    "A bhikkhu was staying in a forest in the Kosala country. Nearby was a lotus pond. Returning from his alms round one noon, he stood on the bank. A red lotus had opened. Its scent came on the air. He bent a little and drew in that scent deeply.",
+    "Then a deva who lived in that pond appeared in the air and said:",
+    "“Bhikkhu, you are taking what has not been given. You are stealing the scent of that flower. Stealing a scent is stealing too.”",
+    "The bhikkhu was taken aback. “I did not pluck the flower, I did not even touch a petal. It is only a scent. And look, over there a man is pulling up the lotuses, tearing out the roots and carrying them off by the armful. You have said nothing to him.”",
+    "The deva said: “He is like a soiled cloth; one more stain will not show on it. You are like a white cloth. Even a small spot of ink shows. It is to you that I must speak.”",
+    "The bhikkhu's heart softened. “Deva, keep watching me. It is good fortune to have someone who will tell me this.”",
+    "“I am not your servant. Look to your own way. Remember what I have said.”"
+   ],
+   "insight": "Not taking what is not given does not stop at property. Time, labour, credit, recognition: theft is possible in these too.",
+   "ambedkar": "This is what Ambedkar pointed to most sharply: to have taken the labour of a community generation after generation while denying it both wage and dignity was a vast theft. The greatest thefts are the ones the law does not call crimes.",
+   "source": "Paduma Puppha Sutta (Samyutta Nikaya 9.14)."
+  },
+  "15": {
+   "title": "The Third Precept: Nakulapita and Nakulamata",
+   "body": [
+    "The Buddha was staying in the deer park at Bhesakala in the Bhagga country. There an elderly couple came to him, Nakulapita and Nakulamata, who had lived together a long time.",
+    "The husband said: “Bhagavan, I married her when I was still a boy. From that day to this, not by act and not even by thought have I been unfaithful to her. Not only in this life, in the lives to come I wish to be with her.”",
+    "The wife said: “Bhagavan, and I likewise. Not even by thought have I been unfaithful to him. I too wish to be with him in the lives to come.”",
+    "The Buddha said: “If two wish to be together, two things must be equal. Both must be of equal faith, of equal virtue, of equal generosity, of equal wisdom. Being so, they will live together in this world and be together beyond it.”",
+    "At another time, when Nakulapita lay ill and trembling, Nakulamata said to him: “Do not die anxious. I will look after the children, I will spin and raise them, I will not marry again, I will stand firm in the Dhamma.” Hearing those words his illness eased. When the Buddha heard of it he said that to find such a companion is great good fortune."
+   ],
+   "insight": "The third precept is not a restriction but the foundation of a relationship. Not breaking trust is the ground of love.",
+   "ambedkar": "When Ambedkar brought forward the Hindu Code Bill, it gave women rights of property, of marriage and of divorce. When Parliament rejected it, he resigned his ministership. His position was that equality must come inside the home as well, and for that he gave up office.",
+   "source": "Samajivi Sutta (Anguttara Nikaya 4.55); Nakulapita Sutta (Anguttara Nikaya 6.16)."
+  },
+  "16": {
+   "title": "The Fourth Precept: The Power of Truth",
+   "body": [
+    "A forest in Magadha. There a quail had hatched her chicks in a nest. One of the chicks had no feathers yet; it could neither walk nor fly.",
+    "One day fire broke out in the forest. The birds cried out and flew. The mother and father, seeing the fire come near and unable to carry the chick, took fright and flew away.",
+    "The chick was left alone. The fire roared all around. It did not cry. Quietly it called a truth to mind:",
+    "“I have wings, but I cannot fly; this is true. I have legs, but I cannot walk; this is true. My parents have left me; this too is true. As far as I know, there is virtue and truth and purity in the world; that too is true. In the name of this truth, let the fire turn back from here.”",
+    "The fire came up to the nest; it stopped at sixteen lengths and went out.",
+    "Having told this story, the Buddha said to Ananda: “Ananda, that quail chick was I. By that act of truth, fire will not spread in this place for the whole of this aeon.”"
+   ],
+   "insight": "Truth is not only honesty in speech; it is seeing your own condition as it is, without hiding it and without inflating it. There is a strength in that.",
+   "ambedkar": "The whole of Ambedkar's politics was an act of truth. He documented the condition of Indian society as it was, without ornament. He set out statistics and historical evidence that were hard to accept. A truth that is hidden saves nobody; it is the truth that is spoken that saves.",
+   "source": "Vattaka Jataka (Jataka 35); Cariyapitaka."
+  },
+  "17": {
+   "title": "The Fifth Precept: The Story of the Jar",
+   "body": [
+    "The Buddha told an old story to Pasenadi, king of Kosala.",
+    "Long ago a forest dweller named Sura found a hollow in a tree. Rainwater had collected in it, mixed with fallen fruit and grain, and had fermented in the sun. Birds drank it, staggered, lay about singing and dancing, and then rose and flew away.",
+    "Sura thought: “If there were poison in it they would have died. It seems to be sweet.” He drank it. It went to his head; he sang, he danced. He called an ascetic and gave him some. The two of them learned to make it together, carried it to the towns and sold it.",
+    "Then this is what happened. Kings drank. Traders drank. Farmers drank. Work stopped; fields lay waste; shops shut. Quarrels multiplied. A city, then a country, then several countries were ruined.",
+    "Then Sakka, the lord of the devas, appeared before people carrying a jar. “Buy this. But ask what is in it. There is no sweetness in it; what is in it is this: it takes away memory; it ruins the body; it destroys shame; it destroys property; it opens the door to lying, theft, quarrelling and killing; it makes a person forget mother and father. Will you pay a price for this?”",
+    "The king took fright, had the jar broken, and stood firm in the precepts."
+   ],
+   "insight": "The fifth precept does not stand alone; it is the watchman of the other four. If awareness goes, the rest fall one by one.",
+   "ambedkar": "What Ambedkar asked of his people again and again was this: give up drink. It was not only a moral instruction but an economic calculation. He knew where the income of a family working for low wages leaks away. Savings, education, self respect: this is the first thing that eats into all three.",
+   "source": "Kumbha Jataka (Jataka 512)."
+  },
+  "18": {
+   "title": "Metta: Fear in the Forest",
+   "body": [
+    "Five hundred bhikkhus took a meditation subject from the Buddha for the rains retreat and went to a forest in the foothills of the Himalayas. Villagers built them huts.",
+    "This was a difficulty for the devas who lived in the trees of that forest. Feeling it improper to remain above while people of virtue stayed at the foot of the trees, they came down and stood below. “These will leave in a day or two,” they thought. But when they learned the bhikkhus meant to stay three months, they decided to drive them out.",
+    "At night, terrifying shapes. Sounds unbearable to hear. A foul stench. The bhikkhus had no sleep, no meditation, and their health failed. Within three weeks they returned and told the Buddha what had happened.",
+    "The Buddha said: “You went without a weapon. Go now with one.” He taught them the Metta Sutta:",
+    "“May all beings be well. The strong and the weak; the long, the short and the middling; those seen and those unseen; those near and those far; those born and those yet to be born; may all be well. As a mother protects her only son even with her life, so should one cultivate a boundless heart towards all beings.”",
+    "Reciting this they entered the forest. The devas felt that love. The terrors stopped, and they began instead to help. Before that rains retreat was over, all five hundred were liberated."
+   ],
+   "insight": "Loving kindness is not a feeling but a practice. It becomes complete only when we include in it those we fear.",
+   "ambedkar": "Ambedkar laid maitri, metta, as the foundation stone of his Dhamma. Of the three, liberty, equality and fraternity, he said fraternity is the hardest, and yet it is the one that holds the other two in place. Equality can be brought by law; without maitri it will not last.",
+   "source": "Karaniya Metta Sutta (Sutta Nipata 1.8); commentary."
+  },
+  "19": {
+   "title": "Karuna: Caring for the Sick",
+   "body": [
+    "At the Jeta Grove a bhikkhu named Putigatta Tissa fell ill. His body was covered in sores; they broke and ran. The robe he wore stuck to his body. Unable to bear the smell, those who lived with him laid him aside in a corner and moved away. Nobody came near him.",
+    "That morning, when the Buddha surveyed the world as was his custom, that bhikkhu came into his sight.",
+    "He went to the kitchen and heated water in a pot. Ananda helped him. The two went to where the bhikkhu lay. The Buddha took hold of the bed.",
+    "The other bhikkhus came running. “Bhagavan, we will do it.”",
+    "The Buddha had them stand, soaked the robe gently with water and eased it away, and told them to wash it and dry it. Then he washed the bhikkhu's body with warm water and dressed him in a clean robe. To that bhikkhu, now settled in body and mind, he taught the Dhamma; and there he was liberated.",
+    "Then the Buddha gathered the sangha and said a word that stands to this day:",
+    "“Bhikkhus, you have no mother, you have no father; who else is there to look after you? You must look after one another. Whoever would attend on me, let him attend on the sick.”"
+   ],
+   "insight": "Compassion is not pitying; it is going close. Going near when others move away is itself the Dhamma.",
+   "ambedkar": "Untouchability is contained in one word: not coming near. What the Buddha did was the exact opposite; he himself touched and washed a body of sores and stench. Moments such as this were among the reasons Ambedkar chose the Buddha's Dhamma. Here purity is not birth but action.",
+   "source": "Vinaya Mahavagga VIII; Dhammapada commentary (verse 41)."
+  },
+  "20": {
+   "title": "Mudita: Sumana's Handful of Flowers",
+   "body": [
+    "In Rajagaha there was a garland maker named Sumana. Every morning he carried eight handfuls of jasmine to King Bimbisara and received eight coins for them. That was his living.",
+    "One morning he was going towards the palace with the flowers. On the way the Buddha was coming for alms with the bhikkhus. At that sight a great joy rose in Sumana.",
+    "He thought: “If I give these flowers to the king I get coins. If I do not, the king may imprison me, banish me, even take my life. Let it be. The king's coins are for this life only; these flowers are for the whole of my life.”",
+    "He scattered all eight handfuls over the Buddha. When he reached home he told his wife. She took fright, quarrelled with him, ran to the palace itself saying the king would kill him, and declared that she was not answerable for what he had done.",
+    "Bimbisara was a disciple of the Buddha. Hearing this he felt no anger; he felt gladness. “I would have hesitated to do it. This man staked his very livelihood,” he marvelled. He called Sumana and honoured him with eight of each of eight things: elephants, horses, servants, ornaments, land and money."
+   ],
+   "insight": "Mudita is gladness at another's good fortune. It is the exact opposite of envy: feeling lifted oneself by seeing another rise.",
+   "ambedkar": "Ambedkar pointed out with pain that oppressed communities carry within them their own subdivisions and rivalries. When one person rises, the rest should celebrate it, not pull them back. The other side of his saying that an educated person owes a duty back to their community is that the community must bless them gladly.",
+   "source": "Dhammapada commentary (the story of Sumana the garland maker); Apadana."
+  },
+  "21": {
+   "title": "Upekkha: The Gift Not Accepted",
+   "body": [
+    "The brother of a brahmin of the Bharadvaja clan went forth under the Buddha. Hearing of it, Akkosaka Bharadvaja fell into a rage. He came straight to the Bamboo Grove, stood before the Buddha and began to abuse him loudly enough for the whole street to hear. Harsh words, insults, humiliations.",
+    "The Buddha listened quietly. When the abuse was finished he asked the brahmin a question:",
+    "“Brahmin, do relatives or friends come to your house as guests?”",
+    "“They do, Gotama.”",
+    "“You would serve them food and refreshment, would you not?”",
+    "“I would.”",
+    "“If they do not accept it, whose is it?”",
+    "“If they do not accept it, it remains mine.”",
+    "“Just so, brahmin. You abuse me, you scold me, you revile me. I do not accept it. It remains yours. Take it back.",
+    "“He who abuses in return the one who abuses him eats together with the one who is eating. I do not eat with you. He who does not answer anger with anger wins the hardest battle. That is good for himself and good for others.”",
+    "The brahmin stood stunned; and then he became a disciple of the Buddha."
+   ],
+   "insight": "Upekkha is not indifference but even mindedness. Praise and blame need our permission before they can touch us.",
+   "ambedkar": "Ambedkar met slander his whole life; he was branded a traitor and a separatist. He did not spend his time answering back; he wrote his answer into documents, into laws, into institutions. The gift he did not accept went back to the giver.",
+   "source": "Akkosa Sutta (Samyutta Nikaya 7.2)."
+  },
+  "22": {
+   "title": "Anatta: Milinda's Chariot",
+   "body": [
+    "Several centuries after the Buddha's time, northwest India was ruled by a Greek king called Milinda, or Menander. He was very learned, and would defeat anyone in debate. Many ascetics had left the city rather than face his questions.",
+    "At last a bhikkhu named Nagasena came. The king met him and asked as his first question: “Who are you? What is your name?”",
+    "“King, they call me Nagasena. But that is a convention, no more. There is no permanent person here called Nagasena.”",
+    "The king bristled. “If you do not exist, who is it that receives your food? Who keeps the precepts? Then is there no good and no evil either?”",
+    "Nagasena asked: “King, did you walk here, or come in a vehicle?”",
+    "“I came in a chariot.”",
+    "“What is a chariot? Is it the axle? The wheels? The frame? The flagstaff? The yoke? The reins? The whip?”",
+    "“No, none of these by itself is the chariot.”",
+    "“Is it all of them together?”",
+    "“Not that either.”",
+    "“Is it something apart from these?”",
+    "“Not that either.”",
+    "“Then is there no chariot, king? Did you speak falsely?”",
+    "The king laughed. “No. We give the name chariot by convention to these parts standing together in this way.”",
+    "“Just so, king. To form, feeling, perception, formations and consciousness standing together we give the name Nagasena. Behind the name there is no permanent thing.”"
+   ],
+   "insight": "The self is not a permanent thing but a working name. Whatever we grip and grow proud of is a chariot.",
+   "ambedkar": "The very ground of caste is the claim that a person has a permanent, unchanging inner nature: he is like this from birth. Anatta demolishes that ground. If there is no permanent nature, there is no permanent hierarchy. Ambedkar saw this not merely as a philosophy but as an instrument of liberation.",
+   "source": "Milindapanha; Anattalakkhana Sutta (Samyutta Nikaya 22.59)."
+  },
+  "23": {
+   "title": "What He Said to the Kalamas",
+   "body": [
+    "Kesaputta was a town in the Kosala country. The Kalamas who lived there were in confusion. Every ascetic who came to the town praised his own doctrine alone and attacked the others. They did not know who was telling the truth.",
+    "When the Buddha came to that town they put this to him. The answer he gave stands to this day as what is distinctive about Buddhism:",
+    "“Kalamas, your doubt is reasonable. Consider it in this way:",
+    "“Do not accept a thing because it has long been said. Do not accept it because it comes down by tradition. Do not accept it because everyone says it. Do not accept it because it is in a book. Do not accept it because it fits logic, or because it fits inference. Do not accept it because the speaker is competent. Do not accept it because the speaker is your teacher.",
+    "“Kalamas, when you yourselves know that these things are unwholesome, blameworthy, censured by the wise, and that undertaken they bring harm and suffering, then give them up.",
+    "“When you yourselves know that these things are wholesome, blameless, praised by the wise, and that undertaken they bring welfare and happiness, then take them up and live by them.”",
+    "Then he gave a simple test: “When greed arises in a person, does it bring him welfare or harm?” “Harm, Bhagavan.” “Hatred? Delusion?” “Harm.” “Do not accept this because I said it; see whether it shows in your own experience.”"
+   ],
+   "insight": "This sutta does not ask for belief; it asks for testing. Here is a teacher who told people to test the Buddha himself.",
+   "ambedkar": "For Ambedkar this was the decisive reason. “I accept the Dhamma of the Buddha, because it is open to reason and it does not claim any book to be infallible,” he said. In the twenty two vows he gave, the centre is not faith in a god but reason and conduct. It is rare for a religion to invite you to test it.",
+   "source": "Kesaputti Sutta, also called the Kalama Sutta (Anguttara Nikaya 3.65)."
+  },
+  "24": {
+   "title": "Sunita: The Sweeper Who Became an Arahant",
+   "body": [
+    "In the city of Rajagaha there was a man named Sunita. His work was sweeping and cleaning the streets. Society had set him aside as of very low birth. People would move away if they saw him at a distance, and he was used to standing aside of his own accord.",
+    "One dawn, while he was sweeping the street, the Buddha came along it with the bhikkhus. Sunita trembled. There was nowhere to step aside. He pressed himself against the wall, hid his basket and stood with his head bowed.",
+    "The Buddha came near him, stopped, and called him gently: “Sunita.”",
+    "Nobody had ever called his name that way. He looked up.",
+    "“Sunita, will you leave this work and come with me?”",
+    "“Bhagavan, who would accept someone of my birth?”",
+    "“In the Dhamma there is no place for birth. Come.”",
+    "He was ordained that same day. Sunita practised intently and before long reached the state of an arahant.",
+    "Later, when brahmins saw Sakka and Brahma paying him respect, they came to the Buddha. Sunita told his own story: “I was born into a low family; I was poor; I did degrading work. People despised me. But I grew in the Dhamma of the Buddha. Now I have attained the three knowledges; my work is done.”",
+    "The Buddha said to the brahmins: “Not by birth is one a brahmin. By action.”"
+   ],
+   "insight": "The Dhamma stops nobody at the door to question them. Once inside, a person's birth says nothing about them.",
+   "ambedkar": "The Buddha built the sangha as a society without caste; Sunita, Sopaka, Sati the fowler's son and many others found a place there. It was the sense that “in India I see a casteless history in one community only, and that is the Buddha's sangha” that carried Ambedkar to Nagpur.",
+   "source": "Theragatha (Sunita Thera); Apadana; Vasala Sutta (Sutta Nipata 1.7)."
+  },
+  "25": {
+   "title": "Agganna Sutta: How Society Began",
+   "body": [
+    "Vasettha and Bharadvaja were two young men born into brahmin families who joined the Buddha's sangha. Seeing this, other brahmins abused them harshly: “Brahmins are the high class born from the mouth of Brahma. You have left it and mixed with the low.”",
+    "Hearing this, the Buddha explained to them:",
+    "“Vasettha, brahmin women conceive and give birth just as other women do. Nobody was born from the mouth of Brahma. In all four classes there are good people and bad; both are the result of their own actions.”",
+    "Then he told a long story. In the beginning, beings were made of light; there were no divisions. In time land appeared, and taste appeared, and greed appeared. They began to cultivate rice; they divided the land among themselves and drew boundaries. Then theft began, and lying began, and quarrelling began.",
+    "At that point people gathered and considered: “Let us choose one from among ourselves. Let him rebuke justly what should be rebuked and banish what should be banished. We will give him a share of the rice.”",
+    "The one so chosen they called Mahasammata, which means the one agreed upon by many. That is how a king began.",
+    "“Vasettha, all these classes were made by human beings for their needs; they are old names, no more. They were not laid down by any god.”"
+   ],
+   "insight": "Social hierarchy is not natural; it arose in history. What human beings made, human beings can change.",
+   "ambedkar": "This was a very important sutta for Ambedkar. That the authority of the state is born from the consent of the people was said here two thousand five hundred years ago, long before the European theory of the social contract. To refute the claim that caste is divine he needed no foreign philosophy; this soil's own answer was enough.",
+   "source": "Agganna Sutta (Digha Nikaya 27); Vasettha Sutta (Majjhima Nikaya 98)."
+  },
+  "26": {
+   "title": "Sigalovada Sutta: The Householder's Way",
+   "body": [
+    "In Rajagaha there was a young man named Sigala. As his father lay dying he had given an instruction: “Every morning, worship the six directions.”",
+    "Obeying his father, Sigala went out every dawn in wet clothes with wet hair and worshipped the six directions with folded hands: east, south, west, north, below and above. He did not know why.",
+    "One morning the Buddha saw him. “Sigala, what are you doing?” He told him. The Buddha said: “What your father said is right. But the directions he meant are not these. Let me tell you the true six directions.”",
+    "“The east is your mother and father. The west is your wife and children. The south is your teachers. The north is your friends. The direction below is those who work for you. The direction above is ascetics and the wise.",
+    "“To worship each direction is to do your duty towards it. And it is not one sided; it runs both ways.”",
+    "Then he set out each in detail. On the direction below in particular: “Workers should be given work suited to their capacity; they should be given food and wages; they should be cared for when ill; good food should be shared with them; they should be given rest at the proper time.”",
+    "He also explained how to use wealth, whom not to take as a friend, and the four ways in which wealth is destroyed."
+   ],
+   "insight": "The Dhamma is not for those who have gone forth alone. Conducting one's daily relationships honestly is the householder's meditation.",
+   "ambedkar": "One thing stands out in this sutta: it is not only that the worker must honour the one above, but that the one above must honour the worker as a direction of their own. The laws on working hours, wages, maternity benefit and health that Ambedkar brought in as labour member are the modern form of that same idea. The one who labours is to be honoured.",
+   "source": "Sigalovada Sutta (Digha Nikaya 31)."
+  },
+  "27": {
+   "title": "Mangala Sutta: What Is a Blessing",
+   "body": [
+    "In those days there was a great debate among people: what is auspicious? What is a good omen? Some said what is seen with the eye is auspicious; some, what is heard with the ear; some, what is touched. The whole country discussed it, and the talk reached even the world of the devas. For twelve years the debate went unsettled.",
+    "At last, at midnight, a shining deva came to the Jeta Grove, stood after paying respect, and asked: “Many devas and human beings think about blessings, longing for welfare. Tell us what the highest blessing is.”",
+    "The Buddha named no omen at all. What he said was this:",
+    "Not to associate with fools; to associate with the wise; to honour those worthy of honour. To live in a suitable place; to have done good before; to set oneself in the right direction.",
+    "Wide learning; skill in a craft; good training; pleasant speech. Caring for mother and father; supporting wife and children; work that brings no confusion.",
+    "Generosity; an honest life; care for relatives; blameless deeds. Turning away from evil; abstaining from drink; not slackening in the Dhamma.",
+    "Respect; humility; contentment; gratitude; hearing the Dhamma at the right time. Patience; a mind willing to listen; meeting those who have gone forth; discussing the Dhamma.",
+    "And at the last: “A mind unshaken by the ups and downs of the world; a mind without sorrow, pure, without fear. This is the highest blessing. Those who do these things are undefeated everywhere; everywhere they come to welfare.”"
+   ],
+   "insight": "There is no such thing as luck sitting outside us. Good company, good work, good conduct: these are a person's omens.",
+   "ambedkar": "First in the list of the Mangala Sutta come right companionship, learning and skill. Ambedkar's call was the same: educate, agitate, organise. He rejected omens and astrology; the fate of a community is not in the stars but in its schools and its organisations.",
+   "source": "Mangala Sutta (Sutta Nipata 2.4; Khuddakapatha)."
+  },
+  "28": {
+   "title": "The Seven Conditions of the Vajjis",
+   "body": [
+    "Ajatasattu, king of Magadha, decided to attack the Vajji country. But it was a republic, governed by many leaders together. It would not be easy to win. So he sent his minister Vassakara to the Buddha: “Tell him what I intend, and hear what he says.”",
+    "Vassakara met the Buddha on Vulture Peak and gave the message. The Buddha did not answer him directly. He turned instead to Ananda, who was standing by fanning him, and began to ask questions:",
+    "“Ananda, do the Vajjis meet often? Do they meet in full?” “Yes, Bhagavan.” “Do they meet in concord, rise in concord, and act in concord?” “Yes.” “Do they refrain from enacting what has not been enacted and from repealing what has been enacted, and follow the old Vajji code?” “Yes.” “Do they honour their elders and listen to what they say?” “Yes.” “Do they refrain from carrying off women and girls by force?” “Yes.” “Do they maintain their places of worship? Do they give protection to good people?” “Yes, Bhagavan.”",
+    "The Buddha turned to Vassakara: “Minister, so long as these seven hold, the Vajjis will grow; they will not decline.”",
+    "Vassakara said: “Bhagavan, with even one of them they cannot be beaten; with all seven there is nothing to discuss. It cannot be done by war; it can only be done by sowing division within.” And that is what he did in later years.",
+    "That same day the Buddha gathered the sangha and laid down these same seven conditions for the sangha as well."
+   ],
+   "insight": "A community is hard to destroy from outside; once division enters, it is easy. Unity and continuous discussion are the protection.",
+   "ambedkar": "Ambedkar saw the roots of Indian parliamentary procedure in the Buddhist sangha: resolutions, voting by ticket, the moving of motions, the quorum. His warning on the day the Constitution was adopted was the same: democracy is not new to India, but the caste division within us is its greatest enemy.",
+   "source": "Mahaparinibbana Sutta (Digha Nikaya 16); Anguttara Nikaya 7.21."
+  },
+  "29": {
+   "title": "Manimekalai: The Bowl That Never Emptied",
+   "body": [
+    "The Dhamma did not come to the Tamil land yesterday. Around the second century of the common era, a Madurai merchant named Sithalai Sathanar wrote an epic in Tamil: Manimekalai. It is one of the five great epics, and the oldest Buddhist work in Tamil.",
+    "Manimekalai was the daughter of Kovalan and Madhavi. She was to be raised in dance and in beauty; but Madhavi, having seen how her father ended, raised her daughter on the path of renunciation. The Chola prince Udayakumaran desired her and followed her. She turned away.",
+    "The deva Manimekhala carried her to an island called Manipallavam. Seeing the Buddha's seat there, the memory of a former birth came to her. Later, from a pool called Gomukhi, she received the Amudhasurabhi, a begging bowl that never emptied.",
+    "With it she did one thing only: she fed the hungry. She looked at no caste and no clan. In Kaveripoompattinam, and later in Vanji and in Kanchi, even when famine came her bowl did not empty. She had a prison itself turned into a house of charity.",
+    "At last in Kanchi she learned the Dhamma from the Buddhist teacher Aravana Adigal: the four truths, the twelve links. She went forth.",
+    "There is a line in this epic that may be called the centre of Tamil ethics. Calling hunger a sin, it establishes that ending hunger is the first duty."
+   ],
+   "insight": "The Dhamma begins not in philosophy but in food. When the stomach is empty no teaching reaches the ear.",
+   "ambedkar": "Ambedkar said the same: without economic freedom there is no moral freedom. Manimekalai's never emptying bowl is not a miracle but a principle, that food is everyone's right. And this epic is itself the evidence that Buddhism is not new to the Tamil land; it was already rooted here.",
+   "source": "Manimekalai (Sithalai Sathanar); Veerasoliyam and the Tamil Buddhist textual tradition."
+  },
+  "30": {
+   "title": "Pandithar Iyothee Thass: The Forerunner of Our Own Soil",
+   "body": [
+    "Before Ambedkar, one man had already recovered Buddhism in Tamil Nadu. His name was Pandithar Iyothee Thass, 1845 to 1914.",
+    "He was a Siddha physician, and knew Tamil, Pali, Sanskrit and English. He worked as a physician in the Nilgiris. He raised a question: who are the people called depressed in this land?",
+    "The answer he gave was revolutionary for its day. These people are not low by birth. They were once the Buddhists of this soil. Because they refused to give up Buddhism they were set aside and pushed down generation after generation. Therefore they should not be called depressed but Purva Bauddhas, the original Buddhists.",
+    "In 1898 he founded the Sakya Buddhist Society in Madras. He went to Sri Lanka and received initiation in connection with Anagarika Dharmapala's Maha Bodhi Society. Branches came up in many places, including among the workers of the Kolar Gold Fields.",
+    "In 1907 he began a journal called Oru Paisa Tamilan. In it he wrote continuously on caste, superstition, social oppression and the Buddhist history of the Tamil land. In his book Indirar Desa Sarithiram he sought to recover the Buddhist history of Tamil Nadu.",
+    "He died in 1914. Forty two years before Ambedkar took initiation at Nagpur, this seed had been sown in the Tamil soil."
+   ],
+   "insight": "Someone has already cut the path we walk today. Knowing history is a form of gratitude.",
+   "ambedkar": "Iyothee Thass and Ambedkar never met; yet both arrived at the same conclusion. There is no freedom while remaining inside the caste order; one must step out. To the question of where to go on stepping out, both found the same answer: to the Buddha. The Tamil land's part in this history is its own.",
+   "source": "Oru Paisa Tamilan (from 1907); Indirar Desa Sarithiram; the collected writings of Pandithar Iyothee Thass."
+  },
+  "31": {
+   "title": "The Twenty Two Vows: Where We Stand",
+   "body": [
+    "14 October 1956, the day of Vijayadashami. At Nagpur, lakhs of people had gathered in white. Ambedkar took the three refuges and the five precepts from Mahasthavir Chandramani.",
+    "Then he turned and himself gave initiation to the people gathered there. At that moment he gave the twenty two vows. They are not in the Tipitaka; Ambedkar wrote them for this soil and for this time.",
+    "Their substance is this:",
+    "I will not worship the old gods. I will not accept the Buddha as an avatar of a god; that is false propaganda. I will not perform rites such as shraddha and pinda. I will not accept the idea that one human being is lower than another; I reject caste. I will establish the principle that all human beings are equal.",
+    "I will follow the Buddha's eightfold path. I will keep the ten paramitas. I will show compassion towards all living beings. I will not steal, I will not lie, I will not take intoxicants, I will keep to right conduct. I will live by the principles of equality, compassion and reason.",
+    "The final vow: “I renounce my old religion completely. Today I am reborn.”",
+    "In two months, on 6 December, he died. But the walk he set going did not stop. That we are gathered in this sangha is the proof of it."
+   ],
+   "insight": "The Dhamma is not a belief but a practice. Any story we have heard in these thirty one days remains only a story until it is done.",
+   "ambedkar": "This month we began with the four truths and walked through the eight paths, the five precepts and the four brahma viharas, and we stand now at the twenty two vows. Not a circle; a path. Ambedkar brought us what the Buddha showed; the walking from here is our work. This is what the Buddha meant when he said: I can show you the way; I cannot walk it for you.",
+   "source": "The twenty two vows (Nagpur, 14 October 1956); The Buddha and His Dhamma (Ambedkar, 1957)."
+  }
+ }
+}

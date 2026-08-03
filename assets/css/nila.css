@@ -1,0 +1,1434 @@
+/* ============================================================================
+ * Nila Dhamma · site layer on top of Canopy (namespace nd-)
+ *
+ * Rules honoured from Canopy:
+ *  - reads the SEMANTIC token layer only (--cm-text-*, --cm-action-*, ...)
+ *  - border-first elevation: flat cards get a 1px border, never a shadow
+ *  - key-lines are a 2px inner border-bottom, never a drop shadow
+ *  - focus ring 2.5px green.800 with a mandatory 2px gap, never suppressed
+ *  - motion is functional only, 120/180/240ms
+ *  - no em-dash, no emoji, no ALL-CAPS (tracked sentence-case eyebrows only)
+ *
+ * Documented substitution: Canopy is Figtree-only, and Figtree has no Tamil
+ * coverage. Tamil glyphs fall through to Noto Sans Tamil at matching weights
+ * (400/500/600/700). Latin still renders in Figtree. See README.md.
+ * ==========================================================================*/
+
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap');
+
+:root {
+  --nd-font: 'Figtree', 'Noto Sans Tamil', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --nd-shell: 1120px;
+  --nd-reading: 720px;
+  --nd-article: 812px;
+  --nd-topbar: 72px;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  font-size: var(--cm-body-lg-size, 16px);
+  line-height: 26px;
+  color: var(--cm-text-body);
+  background: var(--cm-bg-app);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Canopy sets `.cm-root { font-family: var(--cm-font-family) }`, and a class
+   beats a type selector, so `body { font-family }` alone lost and the Tamil
+   fallback in --nd-font never applied: every Tamil glyph was falling through
+   to system-ui, which is a different face on every platform. Same specificity
+   trap as the page background above; same fix. */
+body,
+body.cm-root { font-family: var(--nd-font); }
+
+/* Tamil compounds run long and have no break opportunity inside them. On a
+   narrow screen a single word can be wider than its column, and the overflow
+   put a scrollbar on the whole page. This breaks only the words that cannot
+   otherwise fit; everything else wraps normally. */
+body { overflow-wrap: break-word; }
+* { box-sizing: border-box; }
+
+/* Tamil needs more leading than Figtree's Latin metrics allow */
+:lang(ta), .nd-ta { line-height: 1.75; }
+
+img { max-width: 100%; display: block; }
+a { color: var(--cm-text-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible {
+  outline: var(--cm-focus-ring-width) solid var(--cm-focus-ring);
+  outline-offset: var(--cm-focus-ring-offset);
+  border-radius: var(--cm-radius-sm);
+}
+
+h1, h2, h3, h4 { color: var(--cm-text-primary); margin: 0; font-weight: 600; }
+
+.nd-shell { width: 100%; max-width: var(--nd-shell); margin: 0 auto; padding: 0 24px; }
+.nd-reading { max-width: var(--nd-reading); }
+/* The archive article. Wider than a reading column because the photographs
+   are half the story, and centred because a post page carries no sidebar to
+   balance it. */
+.nd-article { max-width: var(--nd-article); margin-inline: auto; }
+.nd-section { padding: 56px 0; }
+.nd-section--tight { padding: 36px 0; }
+.nd-well-band { background: var(--cm-bg-well); border-top: 1px solid var(--cm-border-default); border-bottom: 1px solid var(--cm-border-default); }
+
+.nd-skip {
+  position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--cm-bg-app); color: var(--cm-text-accent);
+  padding: 10px 16px; border: 1px solid var(--cm-border-strong); border-radius: var(--cm-radius-md);
+}
+.nd-skip:focus { left: 16px; top: 12px; }
+
+/* ---- Eyebrow (11px/700, tracked, sentence case) ---- */
+.nd-eyebrow {
+  font-size: var(--cm-eyebrow-size, 11px);
+  font-weight: var(--cm-eyebrow-weight, 700);
+  letter-spacing: var(--cm-eyebrow-tracking, 0.06em);
+  color: var(--cm-text-muted);
+  line-height: 16px;
+}
+
+/* ---- Topbar ---- */
+/* Translucent over the surface tint, not over white: content scrolling under
+   the bar should tint it, not bleach it. Canopy's survey bar is the
+   precedent for the blur. */
+.nd-topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(251, 252, 251, 0.9);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--cm-border-default);
+}
+.nd-topbar__inner { display: flex; align-items: center; gap: 16px; height: var(--nd-topbar); }
+/* ---- Brand lockup ----
+   The mark leads: it stands taller than the two text lines together rather
+   than matching their combined cap height, so the chakra reads first and the
+   wordmark follows it. A hairline rule separates the two lines so the
+   romanised name reads as a subtitle rather than a repeat. */
+.nd-brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.nd-brand:hover { text-decoration: none; }
+/* The sangha's Ashoka Chakra mark. It carries its own navy, which sits outside
+   the Canopy token set by design: a brand mark is not chrome to be recoloured. */
+.nd-brand__mark { width: 48px; height: 48px; flex: none; border-radius: 50%; }
+.nd-brand__text { display: flex; flex-direction: column; gap: 3px; }
+.nd-brand__name {
+  font-size: 19px; font-weight: 700; color: var(--cm-text-primary);
+  line-height: 22px; letter-spacing: -0.01em;
+}
+.nd-brand__sub {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--cm-text-muted); line-height: 12px;
+}
+.nd-brand__sub::before {
+  content: ""; width: 14px; height: 1.5px; flex: none;
+  background: var(--cm-action-primary); border-radius: 1px;
+}
+.nd-brand:hover .nd-brand__name { color: var(--cm-text-accent); }
+
+.nd-nav { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-wrap: wrap; }
+.nd-nav a {
+  display: inline-flex; align-items: center; height: 38px; padding: 0 11px;
+  font-size: 14px; font-weight: 500; color: var(--cm-text-body);
+  border-radius: var(--cm-radius-md); text-decoration: none;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-nav a:hover { background: var(--cm-bg-hover); text-decoration: none; }
+.nd-nav a[aria-current="page"] { font-weight: 700; color: var(--cm-text-accent); background: var(--cm-accent-wash); }
+
+.nd-navtoggle { display: none; }
+
+/* ---- Hero ----
+   The photograph carries the page, so the scrim is directional rather than a
+   flat wash: heavy on the left where the copy sits, clearing to almost nothing
+   on the right so the silhouette and the light behind it stay readable. */
+.nd-hero { position: relative; border-bottom: 1px solid var(--cm-border-default); overflow: hidden; }
+.nd-hero__media { position: absolute; inset: 0; }
+.nd-hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 64% 42%; }
+.nd-hero__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(0deg, rgba(6, 16, 11, 0.55) 0%, rgba(6, 16, 11, 0) 45%),
+    linear-gradient(95deg,
+      rgba(6, 16, 11, 0.93) 0%,
+      rgba(6, 16, 11, 0.82) 30%,
+      rgba(6, 16, 11, 0.48) 56%,
+      rgba(6, 16, 11, 0.14) 78%,
+      rgba(6, 16, 11, 0.04) 100%);
+}
+.nd-hero__inner { position: relative; min-height: 540px; padding: 96px 0 88px;
+  display: flex; flex-direction: column; justify-content: center; }
+.nd-hero__quote {
+  font-size: 44px; line-height: 1.34; font-weight: 700; letter-spacing: -0.02em;
+  color: #ffffff; max-width: 13ch; margin: 16px 0 0;
+  text-wrap: balance;
+}
+.nd-hero__attrib { margin-top: 16px; font-size: 15px; font-weight: 500; color: #cfe6d6; }
+.nd-hero .nd-eyebrow { color: #bcd8c4; }
+.nd-hero__lede { margin-top: 24px; max-width: 44ch; font-size: 16px; line-height: 1.85; color: #dde8e1; }
+.nd-hero__actions { margin-top: 34px; display: flex; gap: 12px; flex-wrap: wrap; }
+.nd-hero__actions .cm-btn--secondary {
+  background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.45);
+}
+.nd-hero__actions .cm-btn--secondary:hover { background: rgba(255, 255, 255, 0.1); }
+.nd-hero__actions .cm-btn:focus-visible { outline-color: #d9eedd; }
+
+/* ---- Page head ---- */
+.nd-pagehead { padding: 48px 0 32px; border-bottom: 1px solid var(--cm-border-default); }
+.nd-pagehead h1 { font-size: 31px; line-height: 1.35; letter-spacing: -0.018em; margin-top: 8px; }
+.nd-pagehead p { margin: 14px 0 0; max-width: 62ch; color: var(--cm-text-muted); }
+
+/* ---- Section head with key-line ---- */
+.nd-sechead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding-bottom: 12px; border-bottom: 2px solid var(--cm-border-default); margin-bottom: 24px; }
+.nd-sechead h2 { font-size: 21px; line-height: 28px; letter-spacing: -0.01em; }
+.nd-sechead p { margin: 6px 0 0; font-size: 14px; color: var(--cm-text-muted); }
+
+/* ---- Grid ---- */
+.nd-grid { display: grid; gap: 20px; }
+.nd-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.nd-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.nd-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.nd-grid--aside { grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; align-items: start; }
+
+/* ---- Cards (flat, border-first) ---- */
+.nd-card { padding: 24px; }
+.nd-card h3 { font-size: 17px; line-height: 24px; }
+.nd-card p { margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--cm-text-muted); }
+.nd-card__icon {
+  width: 40px; height: 40px; border-radius: var(--cm-radius-md);
+  background: var(--cm-accent-wash); color: var(--cm-green-800);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+
+/* Media card: 150px capped image + hairline divider (Canopy media-card rule) */
+.nd-mediacard { display: flex; flex-direction: column; overflow: hidden; }
+.nd-mediacard__media { height: 150px; background: var(--cm-bg-well); border-bottom: 1px solid var(--cm-border-default); }
+.nd-mediacard__media img { width: 100%; height: 100%; object-fit: cover; }
+.nd-mediacard__body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.nd-mediacard__body h3 { font-size: 15px; line-height: 22px; }
+.nd-mediacard__meta { font-size: 13px; color: var(--cm-text-muted); font-variant-numeric: tabular-nums; }
+.nd-mediacard__excerpt { font-size: 14px; line-height: 1.65; color: var(--cm-text-muted); margin: 0; }
+a.nd-mediacard { color: inherit; }
+a.nd-mediacard:hover { text-decoration: none; border-color: var(--cm-border-strong); }
+a.nd-mediacard:hover h3 { color: var(--cm-text-accent); }
+
+/* ---- Stat row ---- */
+.nd-stat { padding: 20px 22px; }
+.nd-stat__value { font-size: 31px; line-height: 38px; font-weight: 700; letter-spacing: -0.018em;
+  color: var(--cm-text-primary); font-variant-numeric: tabular-nums; }
+.nd-stat__label { margin-top: 4px; font-size: 14px; color: var(--cm-text-muted); }
+
+/* ---- Feature panel (image beside text) ---- */
+.nd-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; overflow: hidden; }
+/* position:absolute keeps the panel height driven by the copy, not by the
+   photo's intrinsic aspect ratio */
+.nd-feature__media { position: relative; min-height: 340px; background: var(--cm-bg-well); }
+.nd-feature__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.nd-feature__body { padding: 40px; align-self: center; }
+.nd-feature__body h2 { font-size: 25px; line-height: 32px; letter-spacing: -0.015em; }
+.nd-feature__body p { margin: 16px 0 0; line-height: 1.8; color: var(--cm-text-muted); }
+.nd-feature--flip .nd-feature__media { order: 2; }
+
+/* ---- Prose ---- */
+.nd-prose { font-size: 16px; line-height: 1.85; color: var(--cm-text-body); }
+.nd-prose h2 { font-size: 21px; line-height: 28px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+.nd-prose h3 { font-size: 17px; line-height: 24px; margin: 28px 0 8px; }
+.nd-prose p { margin: 0 0 16px; }
+.nd-prose ul, .nd-prose ol { margin: 0 0 16px; padding-left: 22px; }
+.nd-prose li { margin-bottom: 8px; }
+.nd-prose blockquote {
+  margin: 24px 0; padding: 16px 20px;
+  border-left: 3px solid var(--cm-action-primary);
+  background: var(--cm-accent-wash); border-radius: 0 var(--cm-radius-lg) var(--cm-radius-lg) 0;
+  color: var(--cm-text-strong); font-size: 17px; line-height: 1.75;
+}
+.nd-prose__lede { font-size: 18px; line-height: 1.8; color: var(--cm-text-strong); }
+
+/* ---- Timeline ---- */
+.nd-timeline { list-style: none; margin: 0; padding: 0; }
+.nd-timeline li { position: relative; padding: 0 0 26px 30px; border-left: 1.5px solid var(--cm-border-default); }
+.nd-timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.nd-timeline li::before {
+  content: ""; position: absolute; left: -6px; top: 6px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--cm-action-primary); border: 2px solid var(--cm-bg-app);
+}
+.nd-timeline__date { font-size: 13px; font-weight: 700; color: var(--cm-text-muted); font-variant-numeric: tabular-nums; }
+.nd-timeline__title { font-size: 16px; font-weight: 600; color: var(--cm-text-primary); margin-top: 2px; }
+.nd-timeline__body { font-size: 14px; line-height: 1.7; color: var(--cm-text-muted); margin-top: 6px; }
+
+/* ---- Filter bar / chips ---- */
+.nd-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.nd-chip {
+  height: 34px; padding: 0 14px; display: inline-flex; align-items: center;
+  font-family: inherit; font-size: 13.5px; font-weight: 500; color: var(--cm-text-body);
+  background: var(--cm-bg-app); border: 1px solid var(--cm-border-strong);
+  border-radius: var(--cm-radius-md); cursor: pointer;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+  font-variant-numeric: tabular-nums;
+}
+.nd-chip:hover { background: var(--cm-bg-well); }
+.nd-chip[aria-pressed="true"] {
+  font-weight: 600; color: var(--cm-text-accent);
+  background: var(--cm-accent-wash-selected); border: 1.5px solid var(--cm-action-primary);
+}
+
+/* ---- Name list ---- */
+.nd-names { columns: 4; column-gap: 24px; margin: 0; padding: 0; list-style: none; }
+.nd-names li {
+  break-inside: avoid; padding: 7px 0; font-size: 15px; line-height: 1.5;
+  color: var(--cm-text-body); border-bottom: 1px solid var(--cm-neutral-100);
+}
+.nd-names li span { color: var(--cm-text-muted); font-size: 13px; font-variant-numeric: tabular-nums;
+  display: inline-block; min-width: 34px; }
+
+/* ---- Gallery ---- */
+.nd-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.nd-gallery figure { margin: 0; border: 1px solid var(--cm-border-default); border-radius: var(--cm-radius-lg); overflow: hidden; background: var(--cm-bg-well); }
+.nd-gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.nd-gallery figcaption { padding: 10px 12px; font-size: 12.5px; line-height: 1.5; color: var(--cm-text-muted); border-top: 1px solid var(--cm-border-default); background: var(--cm-bg-app); }
+
+/* ---- Alert (uses Canopy status pairing: color + icon + copy) ---- */
+.nd-alert { display: flex; gap: 12px; padding: 16px 18px; border-radius: var(--cm-radius-lg); border: 1px solid; align-items: flex-start; }
+.nd-alert svg { flex: none; margin-top: 2px; }
+.nd-alert p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.7; }
+.nd-alert__title { font-size: 15px; font-weight: 600; }
+.nd-alert--info { background: var(--cm-info-soft); border-color: #cfdcf6; color: var(--cm-info-text); }
+.nd-alert--info p { color: var(--cm-text-body); }
+.nd-alert--success { background: var(--cm-success-soft); border-color: #bcdcc6; color: var(--cm-success-text); }
+.nd-alert--success p { color: var(--cm-text-body); }
+.nd-alert--accent { background: var(--cm-accent-wash); border-color: var(--nd-tint-border); color: var(--cm-text-accent); }
+.nd-alert--accent p { color: var(--cm-text-body); }
+
+/* ---- Definition rows ---- */
+.nd-deflist { margin: 0; }
+.nd-deflist > div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 20px;
+  padding: 16px 0; border-bottom: 1px solid var(--cm-neutral-100); }
+.nd-deflist > div:last-child { border-bottom: none; }
+.nd-deflist dt { font-size: 14px; font-weight: 600; color: var(--cm-text-primary); }
+.nd-deflist dd { margin: 0; font-size: 15px; line-height: 1.7; color: var(--cm-text-muted); }
+
+/* ---- Steps ---- */
+.nd-steps { list-style: none; counter-reset: nd 0; margin: 0; padding: 0; }
+.nd-steps li { counter-increment: nd; position: relative; padding: 0 0 24px 48px; }
+.nd-steps li::before {
+  content: counter(nd); position: absolute; left: 0; top: 0;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--cm-accent-wash); color: var(--cm-green-800);
+  border: 1.5px solid var(--nd-tint-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.nd-steps__title { font-size: 16px; font-weight: 600; color: var(--cm-text-primary); }
+.nd-steps__body { margin-top: 6px; font-size: 15px; line-height: 1.7; color: var(--cm-text-muted); }
+
+/* ---- Numbered list ----
+   Lighter than nd-steps, for an enumeration where each item is one line rather
+   than a step with a body. The counter sits in the margin so the text of every
+   item starts on the same line, whatever the number. */
+.nd-numlist { list-style: none; counter-reset: ndn 0; margin: 18px 0 0; padding: 0; }
+.nd-numlist li {
+  counter-increment: ndn; position: relative; padding: 0 0 12px 38px;
+  font-size: 15.5px; line-height: 1.75;
+}
+.nd-numlist li::before {
+  content: counter(ndn); position: absolute; left: 0; top: 1px;
+  width: 24px; text-align: right;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--cm-green-700);
+}
+.nd-numlist li:last-child { padding-bottom: 0; }
+
+/* A list that is reported rather than recommended. The whole set is set back
+   in muted text and only the item the Buddha holds up comes forward, so the
+   ranking is visible before the reader reaches the prose that explains it. */
+.nd-numlist--marked li { color: var(--cm-text-muted); }
+.nd-numlist--marked li:last-child { color: var(--cm-text-body); font-weight: 500; }
+
+/* ---- Ticked list ---- */
+.nd-ticks { list-style: none; margin: 0; padding: 0; }
+.nd-ticks li {
+  position: relative; padding: 0 0 8px 22px;
+  font-size: 15px; line-height: 1.7; color: var(--cm-text-body);
+}
+.nd-ticks li::before {
+  content: ""; position: absolute; left: 2px; top: 10px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--cm-green-700);
+}
+.nd-ticks li:last-child { padding-bottom: 0; }
+
+/* ---- Source line ----
+   Follows a classification with the text it comes from. Set quiet: it is a
+   citation, not part of the argument. */
+.nd-cite {
+  display: flex; align-items: center; gap: 7px;
+  margin: 14px 0 0; font-size: 13.5px; color: var(--cm-text-muted);
+}
+.nd-cite svg { flex: none; color: var(--cm-green-700); }
+
+/* ---- Footer ---- */
+.nd-footer { background: var(--cm-neutral-900); color: #c3ccc6; padding: 52px 0 28px; margin-top: 72px; }
+.nd-footer a { color: #d9eedd; }
+.nd-footer a:focus-visible { outline-color: #d9eedd; }
+.nd-footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; }
+.nd-footer h4,
+.nd-footer__head { color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 14px; }
+.nd-footer ul { list-style: none; margin: 0; padding: 0; }
+.nd-footer li { margin-bottom: 10px; font-size: 14px; }
+.nd-footer__about { font-size: 14px; line-height: 1.8; max-width: 34ch; }
+.nd-footer__bar { margin-top: 40px; padding-top: 20px; border-top: 1px solid #38413b;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #8f998f; }
+.nd-footer__brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.nd-footer__brand img { flex: none; }
+.nd-footer__brand strong { color: #ffffff; font-size: 16px; }
+
+/* ---- Utility ---- */
+.nd-stack-2 > * + * { margin-top: 8px; }
+.nd-stack-3 > * + * { margin-top: 12px; }
+.nd-stack-4 > * + * { margin-top: 16px; }
+.nd-stack-6 > * + * { margin-top: 24px; }
+.nd-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.nd-hidden { display: none !important; }
+.nd-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .nd-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-grid--aside { grid-template-columns: minmax(0, 1fr); }
+  .nd-names { columns: 3; }
+  .nd-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1080px) {
+  .nd-navtoggle {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    margin-left: auto; height: 40px; padding: 0 14px;
+    font-family: inherit; font-size: 14px; font-weight: 600; color: var(--cm-text-primary);
+    background: var(--cm-bg-app); border: 1px solid var(--cm-border-strong);
+    border-radius: var(--cm-radius-md); cursor: pointer;
+  }
+  /* This is an overlay, not an in-flow panel, so Canopy's elevation 2 is the
+     correct treatment. It reads as the menu it is instead of a seam in the
+     page. */
+  .nd-nav {
+    display: none; position: absolute; left: 0; right: 0; top: var(--nd-topbar);
+    flex-direction: column; align-items: stretch; gap: 0; padding: 8px;
+    background: var(--nd-surface);
+    border-bottom: 1px solid var(--cm-border-default);
+    box-shadow: var(--cm-elevation-2);
+  }
+  .nd-nav[data-open="true"] { display: flex; }
+  .nd-nav a { height: 48px; padding: 0 14px; font-size: 15px; }
+  .nd-feature { grid-template-columns: minmax(0, 1fr); }
+  .nd-feature--flip .nd-feature__media { order: 0; }
+  .nd-feature__body { padding: 28px 24px; }
+  /* Single column: the copy now spans the full width, so the side-lit scrim
+     cannot keep it off the bright sky. Switch to a full wash. */
+  .nd-hero__scrim {
+    background:
+      linear-gradient(180deg, rgba(6, 16, 11, 0.88) 0%, rgba(6, 16, 11, 0.70) 46%, rgba(6, 16, 11, 0.84) 100%);
+  }
+  .nd-hero__media img { object-position: 68% 36%; }
+  .nd-hero__quote { font-size: 30px; line-height: 1.4; max-width: none; }
+  .nd-hero__lede { max-width: none; }
+  .nd-hero__inner { min-height: 440px; padding: 64px 0 56px; }
+  .nd-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-deflist > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
+
+@media (max-width: 620px) {
+  .nd-grid--4, .nd-grid--3, .nd-grid--2 { grid-template-columns: minmax(0, 1fr); }
+  .nd-names { columns: 2; }
+  .nd-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-section { padding: 40px 0; }
+  .nd-footer__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media print {
+  .nd-topbar, .nd-footer, .nd-hero__actions { display: none; }
+}
+
+/* ==========================================================================
+ * Additions: breadcrumbs, Dhamma stories, FAQ, related links, address
+ * ==========================================================================*/
+
+/* ---- Breadcrumb ---- */
+.nd-breadcrumb ol {
+  list-style: none; margin: 0 0 18px; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0;
+  font-size: 13px; line-height: 18px;
+}
+.nd-breadcrumb li { display: flex; align-items: center; color: var(--cm-text-muted); }
+.nd-breadcrumb li + li::before {
+  content: ""; width: 5px; height: 5px; margin: 0 10px; flex: none;
+  border-right: 1.5px solid var(--cm-neutral-400);
+  border-top: 1.5px solid var(--cm-neutral-400);
+  transform: rotate(45deg);
+}
+.nd-breadcrumb a { color: var(--cm-text-muted); font-weight: 500; }
+.nd-breadcrumb a:hover { color: var(--cm-text-accent); }
+.nd-breadcrumb [aria-current="page"] { color: var(--cm-text-strong); font-weight: 600; }
+
+/* ---- Page head meta row ---- */
+.nd-pagehead__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px;
+  margin-top: 18px !important; font-size: 13.5px; color: var(--cm-text-muted);
+}
+.nd-pagehead__meta span { display: inline-flex; align-items: center; gap: 8px; }
+.nd-pagehead__meta svg { color: var(--cm-green-700); }
+
+/* ---- Stat card is now a link ---- */
+a.nd-stat { display: block; color: inherit; }
+a.nd-stat:hover { text-decoration: none; border-color: var(--cm-border-strong); background: var(--cm-bg-well); }
+a.nd-stat:hover .nd-stat__value { color: var(--cm-text-accent); }
+.nd-stat__value { display: block; }
+.nd-stat__label { display: block; }
+
+a.nd-card { color: inherit; display: block; }
+a.nd-card:hover { text-decoration: none; border-color: var(--cm-border-strong); }
+a.nd-card:hover h3 { color: var(--cm-text-accent); }
+.nd-card__go {
+  margin-top: 16px !important; display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--cm-text-accent) !important;
+}
+
+/* ---- Tick list ---- */
+.nd-tick { list-style: none; margin: 14px 0 0; padding: 0; }
+.nd-tick li {
+  position: relative; padding: 0 0 10px 26px;
+  font-size: 15px; line-height: 1.65; color: var(--cm-text-muted);
+}
+.nd-tick li::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 12px; height: 7px; border-left: 2px solid var(--cm-action-primary);
+  border-bottom: 2px solid var(--cm-action-primary);
+  transform: rotate(-45deg);
+}
+
+.nd-linklist { list-style: none; margin: 12px 0 0; padding: 0; }
+.nd-linklist li { margin-bottom: 9px; font-size: 15px; }
+.nd-linklist svg { vertical-align: -1px; }
+
+/* ---- Address ---- */
+.nd-address { font-style: normal; display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+.nd-address strong { font-size: 15px; color: var(--cm-text-primary); }
+.nd-address span { font-size: 14px; line-height: 1.6; color: var(--cm-text-muted); }
+
+/* ---- Dhamma stories: index grid ---- */
+.nd-kathai { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.nd-kathai__card {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 22px 20px 20px; color: inherit;
+  transition: border-color var(--cm-duration-fast) var(--cm-ease-standard),
+              background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-kathai__card:hover { text-decoration: none; border-color: var(--cm-border-strong); background: var(--cm-bg-well); }
+.nd-kathai__card:hover .nd-kathai__title { color: var(--cm-text-accent); }
+.nd-kathai__medallion {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--cm-accent-wash); border: 1px solid #dbe7dd;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.nd-kathai__medallion img { width: 60px; height: 60px; object-fit: contain; }
+.nd-kathai__day {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  color: var(--cm-text-muted); line-height: 16px;
+}
+.nd-kathai__title {
+  display: block; margin-top: 5px; font-size: 16px; line-height: 1.5;
+  font-weight: 600; color: var(--cm-text-primary);
+}
+.nd-kathai__insight {
+  display: block; margin-top: 9px; font-size: 13.5px; line-height: 1.65;
+  color: var(--cm-text-muted);
+}
+
+/* ---- Dhamma stories: home-page peek row ---- */
+.nd-kathai__peek { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.nd-kathai__chip {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  background: var(--cm-bg-app); border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-lg); color: inherit;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-kathai__chip:hover { text-decoration: none; background: var(--cm-bg-well); border-color: var(--cm-border-strong); }
+.nd-kathai__chip img {
+  width: 44px; height: 44px; flex: none; padding: 5px; object-fit: contain;
+  background: var(--cm-accent-wash); border-radius: 50%;
+}
+.nd-kathai__chip span { display: block; font-size: 15px; line-height: 1.45; font-weight: 600; color: var(--cm-text-primary); }
+.nd-kathai__chip em {
+  display: block; font-style: normal; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; color: var(--cm-text-muted); margin-bottom: 3px;
+}
+.nd-kathai__chip:hover span { color: var(--cm-text-accent); }
+
+/* ---- Story page ---- */
+.nd-story__head {
+  background: var(--cm-bg-well);
+  border-bottom: 1px solid var(--cm-border-default);
+  padding: 32px 0 34px;
+}
+.nd-story__headrow { display: flex; align-items: center; gap: 26px; }
+.nd-story__medallion {
+  width: 104px; height: 104px; flex: none; border-radius: 50%;
+  background: var(--cm-bg-app); border: 1px solid #dbe7dd;
+  display: flex; align-items: center; justify-content: center;
+}
+.nd-story__medallion img { width: 84px; height: 84px; object-fit: contain; }
+.nd-story__head h1 {
+  font-size: 33px; line-height: 1.35; letter-spacing: -0.018em; margin-top: 8px;
+}
+.nd-story__date {
+  margin: 12px 0 0; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13.5px; font-weight: 600; color: var(--cm-text-muted);
+}
+.nd-story__grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 48px; align-items: start; padding: 48px 0 8px;
+}
+.nd-story__body { max-width: 68ch; }
+/* No drop cap. ::first-letter splits a Tamil grapheme cluster (the base
+   consonant from its vowel sign), so the opening word renders broken. The
+   opening paragraph is set slightly larger instead. */
+.nd-story__body > p:first-of-type {
+  font-size: 17.5px; line-height: 1.85; color: var(--cm-text-strong);
+}
+.nd-story__aside { position: sticky; top: calc(var(--nd-topbar) + 24px); }
+
+.nd-callout {
+  margin: 32px 0; padding: 22px 24px;
+  background: var(--cm-accent-wash); border: 1px solid var(--nd-tint-border);
+  border-left: 3px solid var(--cm-action-primary);
+  border-radius: 0 var(--cm-radius-lg) var(--cm-radius-lg) 0;
+}
+.nd-callout__label {
+  margin: 0 0 10px !important; display: flex; align-items: center; gap: 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  color: var(--cm-green-800);
+}
+.nd-callout__text {
+  margin: 0 !important; font-size: 17px; line-height: 1.75; font-weight: 500;
+  color: var(--cm-text-strong);
+}
+
+.nd-source {
+  margin-top: 32px !important; padding-top: 18px;
+  border-top: 2px solid var(--cm-border-default);
+  font-size: 14px; line-height: 1.7; color: var(--cm-text-muted);
+}
+.nd-source strong { color: var(--cm-text-strong); }
+
+/* ---- Prev / next ---- */
+.nd-prevnext {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  padding: 32px 0 8px; margin-top: 16px;
+  border-top: 1px solid var(--cm-border-default);
+}
+.nd-prevnext__link {
+  display: flex; align-items: center; gap: 14px; padding: 18px 20px;
+  border: 1px solid var(--cm-border-default); border-radius: var(--cm-radius-lg);
+  color: inherit; background: var(--cm-bg-app);
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-prevnext__link:hover { text-decoration: none; background: var(--cm-bg-well); border-color: var(--cm-border-strong); }
+.nd-prevnext__link svg { flex: none; color: var(--cm-green-700); }
+.nd-prevnext__link span { display: block; font-size: 15px; line-height: 1.45; font-weight: 600; color: var(--cm-text-primary); }
+.nd-prevnext__link em {
+  display: block; font-style: normal; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; color: var(--cm-text-muted); margin-bottom: 4px;
+}
+.nd-prevnext__link--next { text-align: right; justify-content: flex-end; }
+
+/* ---- Letter card (stories intro) ---- */
+.nd-letter { padding: 34px 38px; max-width: 780px; margin: 0 auto; }
+.nd-letter__salutation { margin: 14px 0 18px; font-size: 18px; font-weight: 600; color: var(--cm-text-primary); }
+.nd-letter .nd-prose p { font-size: 15.5px; line-height: 1.85; }
+.nd-letter__sign {
+  margin: 22px 0 0; padding-top: 18px; border-top: 2px solid var(--cm-border-default);
+  font-size: 16px; font-weight: 700; color: var(--cm-text-accent);
+}
+
+/* ---- FAQ ---- */
+.nd-faq { display: flex; flex-direction: column; gap: 4px; }
+.nd-faq__item { padding: 18px 0; border-bottom: 1px solid var(--cm-neutral-200); }
+.nd-faq__item:last-child { border-bottom: none; }
+.nd-faq__item h3 { font-size: 17px; line-height: 1.5; color: var(--cm-text-primary); }
+.nd-faq__item p { margin: 9px 0 0; font-size: 15.5px; line-height: 1.8; color: var(--cm-text-body); }
+
+/* ---- Related links ---- */
+.nd-related { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.nd-related__card {
+  display: flex; flex-direction: column; padding: 20px 22px; color: inherit;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-related__card:hover { text-decoration: none; background: var(--cm-bg-well); border-color: var(--cm-border-strong); }
+.nd-related__label { font-size: 16px; font-weight: 600; color: var(--cm-text-primary); line-height: 1.45; }
+.nd-related__card:hover .nd-related__label { color: var(--cm-text-accent); }
+.nd-related__sub { margin-top: 6px; font-size: 13.5px; line-height: 1.6; color: var(--cm-text-muted); }
+.nd-related__go { margin-top: 14px; color: var(--cm-green-700); }
+
+/* ---- Timeline title link ---- */
+.nd-timeline__title a { color: inherit; }
+.nd-timeline__title a:hover { color: var(--cm-text-accent); text-decoration: none; }
+
+@media (max-width: 1080px) {
+  .nd-kathai { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nd-kathai__peek { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-story__grid { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 34px; }
+  .nd-story__aside { position: static; }
+  .nd-story__head h1 { font-size: 27px; }
+  .nd-related { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .nd-kathai { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nd-kathai__peek, .nd-related { grid-template-columns: minmax(0, 1fr); }
+  .nd-prevnext { grid-template-columns: minmax(0, 1fr); }
+  .nd-prevnext__link--next { text-align: left; justify-content: flex-start; flex-direction: row-reverse; }
+  .nd-story__headrow { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .nd-story__medallion { width: 80px; height: 80px; }
+  .nd-story__medallion img { width: 64px; height: 64px; }
+  .nd-story__body > p:first-child::first-letter { font-size: 44px; line-height: 38px; }
+  .nd-letter { padding: 26px 22px; }
+}
+
+/* Hero h1 carries the organisation name and the tagline as one heading, so the
+   home page has exactly one h1 without changing the visual hierarchy. */
+.nd-hero__h1 { margin: 0; font-weight: inherit; }
+.nd-hero__h1 .nd-eyebrow,
+.nd-hero__h1 .nd-hero__quote { display: block; }
+
+/* ==========================================================================
+ * Rebuilt Blogger posts
+ *
+ * The body is parsed into paragraphs and photographs at build time, so this
+ * layer styles real prose and real figures rather than defending against
+ * Blogger's loose divs. Text keeps a reading measure; the photographs take
+ * the full width of the sheet, which is the split a picture-led piece wants.
+ * ==========================================================================*/
+.nd-post__head { padding: 44px 0 34px; border-bottom: 1px solid var(--cm-border-default); }
+.nd-post__head h1 {
+  font-size: 38px; line-height: 1.22; letter-spacing: -0.022em;
+  margin-top: 12px; max-width: 15ch;
+  max-width: min(100%, 22ch);
+}
+.nd-post__head:lang(ta) h1, .nd-post__head h1:lang(ta) { line-height: 1.34; }
+.nd-post__head .nd-eyebrow { color: var(--cm-text-accent); }
+
+/* Date, reading time, photograph count, copy link. One quiet strip under the
+   title; the separators are borders so they hold at any zoom. */
+.nd-postmeta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+  margin-top: 20px; font-size: 13.5px; color: var(--cm-text-muted);
+}
+.nd-postmeta__item { display: inline-flex; align-items: center; gap: 7px; }
+.nd-postmeta svg { flex: none; color: var(--cm-green-700); }
+.nd-copy {
+  display: inline-flex; align-items: center; gap: 7px; height: 30px;
+  padding: 0 12px; font: inherit; font-size: 13px; font-weight: 600;
+  color: var(--cm-text-body); background: var(--nd-surface);
+  border: 1px solid var(--cm-border-default); border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard),
+              border-color var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-copy:hover { background: var(--cm-bg-well); border-color: var(--cm-border-strong); }
+.nd-copy[data-state="done"] { color: var(--cm-text-accent); border-color: var(--cm-green-400, #9cc2a6); }
+
+.nd-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+.nd-tag {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 10px;
+  font-size: 12.5px; font-weight: 600; color: var(--cm-text-body);
+  background: var(--cm-bg-well); border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-sm);
+}
+
+.nd-post__body { padding: 40px 0 8px; }
+/* Text keeps a reading measure inside a sheet cut for photographs. In pixels,
+   not em, so the standfirst at 18px starts on the same line as the 16px
+   paragraphs under it. */
+.nd-post__body > p,
+.nd-post__body > ul,
+.nd-post__body > ol { max-width: 640px; margin-inline: auto; }
+.nd-post__body a { text-decoration: underline; text-underline-offset: 2px; }
+.nd-post .nd-source { display: flex; align-items: center; gap: 8px; }
+.nd-post .nd-source svg { flex: none; color: var(--cm-text-muted); }
+
+/* ---- Photographs ----
+   One picture stands alone at its own proportions, capped so a standing shot
+   cannot fill the screen. Several in a row are packed into justified rows:
+   flex-grow carries each photograph's aspect ratio, so a packing computed at
+   748px keeps its proportions at every width without cropping anything. */
+.nd-fig { margin: 30px auto; }
+.nd-fig figcaption {
+  margin-top: 12px; padding-left: 12px;
+  border-left: 2px solid var(--cm-green-700);
+  font-size: 13.5px; line-height: 1.6; color: var(--cm-text-muted);
+}
+
+.nd-gallery { margin: 30px 0; display: flex; flex-direction: column; gap: 10px; }
+.nd-gallery__row { display: flex; gap: 10px; align-items: stretch; }
+.nd-gallery__gap { display: block; flex-basis: 0; min-width: 0; }
+
+.nd-shot {
+  position: relative; display: block; flex-basis: 0; min-width: 0;
+  overflow: hidden; border-radius: var(--cm-radius-lg);
+  border: 1px solid var(--cm-border-default); background: var(--cm-bg-well);
+  transition: border-color var(--cm-duration-fast) var(--cm-ease-standard);
+}
+/* Only the first photograph declares a height. The rest stretch to it, and
+   because each width is already proportional to its ratio, every picture lands
+   in a box of exactly its own shape. Of-type, not first-child: a short row is
+   centred by a spacer that comes before it. */
+.nd-gallery__row > .nd-shot:first-of-type { aspect-ratio: var(--ar); }
+.nd-shot__img { width: 100%; height: 100%; object-fit: cover; }
+.nd-shot:hover { border-color: var(--cm-border-strong); }
+/* A lone photograph is the same box at its own proportions. Its figure carries
+   the width cap, which is written into the markup because it depends on the
+   aspect ratio, and the caption inherits those edges. */
+.nd-shot--solo { width: 100%; aspect-ratio: var(--ar); }
+
+/* The zoom affordance. Visible on hover and whenever the link has focus, so
+   it is never the only signal that a photograph opens. */
+.nd-shot__zoom {
+  position: absolute; right: 10px; bottom: 10px;
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 999px;
+  color: #ffffff; background: rgba(23, 33, 27, 0.62);
+  opacity: 0; transition: opacity var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-shot:hover .nd-shot__zoom,
+.nd-shot:focus-visible .nd-shot__zoom { opacity: 1; }
+@media (hover: none) { .nd-shot__zoom { opacity: 1; } }
+
+/* On a phone a row of three is three thumbnails. The packing is dropped and
+   every photograph gets the full width at its own proportions. */
+@media (max-width: 640px) {
+  .nd-gallery__row { flex-direction: column; }
+  /* flex-grow now works on height, which would collapse every picture to
+     nothing. The ratio takes over as the sizing rule instead. */
+  .nd-gallery__row > .nd-shot { flex: none; width: 100%; aspect-ratio: var(--ar); }
+  .nd-gallery__gap { display: none; }
+  .nd-post__head h1 { font-size: 28px; }
+  .nd-fig, .nd-gallery { margin: 24px 0; }
+}
+
+/* ---- Photograph viewer ----
+   An overlay, so Canopy allows it a shadow; it is the one place on the site
+   that floats above the page rather than sitting in it. */
+.nd-viewer {
+  position: fixed; inset: 0; z-index: 80;
+  display: flex; flex-direction: column;
+  /* Near solid. At 0.94 the article stayed legible behind the photograph,
+     which is exactly what a viewer is for stopping. */
+  background: rgba(16, 24, 19, 0.975);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--cm-duration-base, 180ms) var(--cm-ease-standard),
+              visibility var(--cm-duration-base, 180ms);
+}
+.nd-viewer[data-open="true"] { opacity: 1; visibility: visible; }
+.nd-viewer__bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 18px; color: #dfe8e1; font-size: 13.5px;
+}
+.nd-viewer__stage {
+  flex: 1; min-height: 0; display: flex; align-items: center;
+  justify-content: center; padding: 0 18px;
+}
+.nd-viewer__stage img {
+  max-width: 100%; max-height: 100%; width: auto; height: auto;
+  border-radius: var(--cm-radius-lg); box-shadow: var(--cm-elevation-3, 0 18px 48px rgba(0, 0, 0, 0.45));
+}
+.nd-viewer__cap {
+  padding: 16px 18px 22px; text-align: center;
+  font-size: 13.5px; line-height: 1.6; color: #b9c7bd; min-height: 22px;
+}
+.nd-viewer__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-width: 40px; height: 40px; padding: 0 12px; font: inherit; font-size: 13.5px;
+  font-weight: 600; color: #eef4ef; background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-viewer__btn:hover { background: rgba(255, 255, 255, 0.16); }
+.nd-viewer__btn:focus-visible { outline: 2.5px solid #ffffff; outline-offset: 2px; }
+.nd-viewer__btn[disabled] { opacity: 0.35; cursor: default; }
+.nd-viewer__nav { display: flex; gap: 10px; }
+body[data-viewer="open"] { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .nd-viewer { transition: none; } }
+
+/* ==========================================================================
+ * Hero: brand line, refuges, motto, rotating-cover caption
+ * ==========================================================================*/
+
+.nd-hero { margin: 0; }
+
+
+
+/* The three refuges. A recital formula, so it is set as three aligned lines
+   rather than a run of prose; the bold half is the object of refuge. */
+.nd-tisarana {
+  display: flex; flex-direction: column; gap: 5px;
+  margin: 26px 0 0; padding: 16px 0 16px 18px;
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  max-width: max-content;
+}
+.nd-tisarana span {
+  display: grid; grid-template-columns: 5.5em auto; gap: 12px;
+  font-size: 16.5px; line-height: 1.5; color: #eaf2ec; letter-spacing: 0.01em;
+}
+.nd-tisarana b { font-weight: 700; color: #ffffff; }
+
+
+
+/* Cover caption. The photograph changes daily, so it has to say what it is. */
+.nd-hero__cap {
+  position: absolute; right: 24px; bottom: 20px; z-index: 2;
+  max-width: 300px; text-align: right;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 12px 14px; border-radius: var(--cm-radius-md);
+  background: rgba(6, 16, 11, 0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.nd-hero__capwhat { font-size: 13px; font-weight: 600; color: #ffffff; line-height: 1.4; }
+.nd-hero__capwhere { font-size: 12px; color: #cfe6d6; line-height: 1.45; }
+.nd-hero__capcredit { font-size: 11px; color: #9db3a4; line-height: 1.45; margin-top: 3px; }
+
+/* ==========================================================================
+ * Calendar
+ * ==========================================================================*/
+.nd-cal__next {
+  display: flex; align-items: center; gap: 20px; padding: 20px 24px;
+  background: var(--cm-accent-wash); border-color: var(--nd-tint-border); margin-bottom: 28px;
+}
+.nd-cal__nextmark {
+  width: 52px; height: 52px; flex: none; border-radius: 50%;
+  background: var(--cm-bg-app); border: 1px solid var(--nd-tint-border); color: var(--cm-green-800);
+  display: flex; align-items: center; justify-content: center;
+}
+.nd-cal__next > div:not(.nd-cal__nextmark) { flex: 1; min-width: 0; }
+.nd-cal__nextdate {
+  margin: 5px 0 0; font-size: 21px; line-height: 28px; font-weight: 700;
+  color: var(--cm-text-primary); letter-spacing: -0.01em;
+}
+.nd-cal__nextmeta { margin: 3px 0 0; font-size: 13.5px; color: var(--cm-text-muted); }
+
+.nd-cal__sub {
+  font-size: 15px; font-weight: 700; color: var(--cm-text-primary);
+  margin: 34px 0 14px; padding-bottom: 9px;
+  border-bottom: 2px solid var(--cm-border-default);
+}
+.nd-cal__scroll { overflow-x: auto; }
+.nd-cal { min-width: 620px; }
+.nd-cal tbody td { height: auto; padding: 13px 12px; vertical-align: top; line-height: 1.6; }
+.nd-cal__date { white-space: nowrap; font-weight: 600; color: var(--cm-text-primary); }
+.nd-cal__when { white-space: nowrap; color: var(--cm-text-muted); }
+.nd-cal__en { font-size: 12.5px; color: var(--cm-text-muted); }
+.nd-cal tbody tr[data-moon].is-next { background: var(--cm-accent-wash-selected); }
+.nd-cal tbody tr[data-moon].is-next .nd-cal__date { color: var(--cm-text-accent); }
+.nd-cal__note {
+  display: flex; gap: 9px; align-items: flex-start;
+  margin: 14px 0 0; font-size: 13px; line-height: 1.65; color: var(--cm-text-muted);
+}
+.nd-cal__note svg { flex: none; margin-top: 3px; }
+
+@media (max-width: 1080px) {
+  .nd-hero__cap { position: static; max-width: none; text-align: left; margin-top: 28px; }
+  .nd-hero { display: flex; flex-direction: column; }
+  .nd-hero__cap { order: 3; margin: 0 24px 24px; }
+}
+@media (max-width: 620px) {
+  .nd-tisarana span { grid-template-columns: 4.8em auto; font-size: 15px; gap: 8px; }
+  .nd-cal__next { flex-direction: column; align-items: flex-start; }
+}
+
+/* Hero links must not use the accent token: green.800 on a dark scrim fails
+   contrast. Light green with an underline instead. */
+.nd-hero a:not(.cm-btn) {
+  color: #a9dcbc; text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.nd-hero a:not(.cm-btn):hover { color: #ffffff; }
+
+/* Tighten the vertical rhythm now that the hero carries brand line, refuges
+   and motto as well as the quote. */
+.nd-hero__inner { min-height: 560px; padding: 60px 0 56px; }
+.nd-hero__quote { font-size: 40px; margin-top: 14px; }
+.nd-hero__attrib { margin-top: 12px; }
+.nd-tisarana { margin-top: 20px; padding: 12px 0 12px 16px; }
+.nd-tisarana span { font-size: 15.5px; }
+.nd-hero__lede { margin-top: 20px; }
+.nd-hero__actions { margin-top: 26px; }
+
+.nd-cal__nth {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px;
+  margin-right: 6px; font-size: 12px; font-weight: 700;
+  color: var(--cm-text-accent); background: var(--cm-accent-wash);
+  border-radius: var(--cm-radius-sm);
+}
+
+/* ---- Hero identity block: mark, name and motto read as one unit ----
+   The mark is now taller than the two text lines beside it, so the lockup
+   centres rather than hanging from the cap height. */
+.nd-hero__id { display: flex; align-items: center; gap: 20px; }
+.nd-hero__logo { width: 88px; height: 88px; flex: none; border-radius: 50%; }
+.nd-hero__brandname {
+  margin: 0; font-size: 27px; line-height: 1.25; font-weight: 700;
+  letter-spacing: -0.01em; color: #ffffff;
+}
+.nd-hero__brandname span { font-weight: 500; color: #cfe6d6; }
+.nd-hero__motto {
+  margin: 9px 0 0; font-size: 14.5px; line-height: 1.6; color: #dde8e1;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.nd-hero__badge {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; white-space: nowrap;
+  color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: var(--cm-radius-sm); padding: 4px 10px;
+}
+.nd-hero__quote { margin-top: 28px; }
+
+@media (max-width: 620px) {
+  .nd-hero__id { gap: 14px; }
+  .nd-hero__logo { width: 64px; height: 64px; }
+  .nd-hero__brandname { font-size: 22px; }
+  .nd-hero__motto { font-size: 13.5px; gap: 8px; }
+}
+
+/* ---- Language switch ----
+   One link, naming the language you would move to. A two-segment control read
+   as a single run-on word ("TamilEnglish") and made the reader work out which
+   half was current. */
+.nd-lang {
+  display: inline-flex; align-items: center; gap: 7px; flex: none;
+  height: 34px; padding: 0 13px; margin-left: 18px;
+  font-size: 13.5px; font-weight: 600; line-height: 1;
+  color: var(--cm-text-body); text-decoration: none;
+  background: var(--cm-bg-app);
+  border: 1px solid var(--cm-border-strong); border-radius: var(--cm-radius-md);
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-lang::before {
+  content: ""; position: absolute; margin-left: -19px; width: 1px; height: 22px;
+  background: var(--cm-border-default);
+}
+.nd-lang svg { color: var(--cm-text-muted); }
+.nd-lang:hover {
+  background: var(--cm-accent-wash); border-color: var(--cm-action-primary);
+  color: var(--cm-text-accent); text-decoration: none;
+}
+.nd-lang:hover svg { color: var(--cm-action-primary); }
+
+.nd-footer__lang a { font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.nd-footer__lang svg { vertical-align: -2px; }
+
+/* Translation notice on English pages carrying doctrinal material */
+.nd-transnote {
+  display: flex; gap: 9px; align-items: flex-start; max-width: var(--nd-reading);
+  margin: 0 auto; padding: 12px 16px;
+  background: var(--cm-info-soft); border: 1px solid #cfdcf6;
+  border-radius: var(--cm-radius-md);
+  font-size: 13px; line-height: 1.6; color: var(--cm-text-body);
+}
+.nd-transnote svg { flex: none; margin-top: 2px; color: var(--cm-info-solid); }
+.nd-transnote--inline { margin: 0 0 24px; }
+
+@media (max-width: 1080px) {
+  /* toggle first, then the language link; the divider would float loose here */
+  .nd-navtoggle { margin-left: auto; order: 1; }
+  .nd-lang { margin-left: 10px; order: 2; }
+  .nd-lang::before { display: none; }
+}
+/* Below this the bar cannot hold a 48px mark, two words and the language
+   switch on one line, and the page picked up a horizontal scrollbar. The
+   labels go rather than the mark: both controls keep an aria-label, and the
+   language switch already dropped its word here. */
+@media (max-width: 420px) {
+  .nd-lang { padding: 0 10px; }
+  .nd-lang span { display: none; }
+  .nd-navtoggle { padding: 0 12px; }
+  .nd-navtoggle span { display: none; }
+}
+
+/* The narrowest phones still in use. With the labels already gone, the only
+   thing left to give is the lockup itself, so the mark steps down and the
+   romanised line under the wordmark goes: the Tamil name carries the identity
+   on its own, and the topbar stops pushing a scrollbar onto the whole page. */
+@media (max-width: 360px) {
+  .nd-brand { gap: 9px; }
+  .nd-brand__mark { width: 38px; height: 38px; }
+  .nd-brand__sub { display: none; }
+  .nd-shell { padding: 0 16px; }
+}
+
+/* ==========================================================================
+ * Surface system
+ *
+ * Canopy is white-on-white by default, which left this site reading as a flat
+ * sheet. The system does sanction one tinted page field: the employee survey
+ * puts a colour field behind a card "to make the survey feel like a calm,
+ * separate space". That is the idiom borrowed here, and applied to the whole
+ * site rather than one page.
+ *
+ *   field    #e4ebe6            the page itself, green-tinted, never grey
+ *   surface  neutral.25 #fbfcfb cards, bands, chrome, overlays, reading sheets
+ *   well     neutral.100 #eef1ef recessed areas inside a surface, hovers
+ *   tint     green.50   #eef5ee  accented panels and bands
+ *
+ * Nothing here is a gradient and nothing in flow floats: separation is still
+ * done by the 1px border. Only the ground changed.
+ *
+ * Two things are retuned rather than added, so that every .cm-* component
+ * follows without being restyled one by one:
+ *
+ *  1. --cm-bg-app moves off pure white to neutral.25. Canopy's rule is that
+ *     components read the semantic layer, so card, menu, modal, input,
+ *     secondary button and segmented control all move together.
+ *  2. --cm-text-muted is re-paired. Canopy sets neutral.600 and measures it
+ *     at 5.0:1 against white; on this field it is 4.29:1, under AA. It steps
+ *     one notch darker, which clears 4.5:1 on every ground used here (field
+ *     4.72, well 5.03, tint 5.16, surface 5.57) and stays visibly lighter
+ *     than body text. Canopy's warning is against going lighter than
+ *     neutral.600, never darker.
+ *
+ * The field is the one value to move if the page should read lighter or
+ * heavier. #e0e7e2 is the floor: past it the re-paired muted text drops under
+ * 4.5:1 and the text colour would have to move again with it.
+ * ==========================================================================*/
+
+:root {
+  --nd-field:   #e4ebe6;
+  --nd-surface: var(--cm-neutral-25);
+  --nd-well:    var(--cm-neutral-100);
+  --nd-tint:    var(--cm-accent-wash);
+  /* Border for tinted surfaces. Canopy has no token between green.100 and
+     neutral.200, and neutral.200 reads cold against the green wash, so this
+     one derived value is named here rather than scattered as a raw hex. */
+  --nd-tint-border: #cfe0d2;
+
+  /* Canopy semantic layer, retuned for the tinted ground. See the note above. */
+  --cm-bg-app:     var(--nd-surface);
+  --cm-bg-well:    var(--nd-well);
+  /* Deepest interactive wash. Stops here rather than going darker because
+     green.700 icons land on it and drop below 4.5:1 past this point. */
+  --cm-bg-hover:   #e7ece9;
+  --cm-text-muted: #5e6961;
+}
+
+/* .cm-root is a class and body is a type selector, so `body { background }`
+   alone loses to Canopy's own rule and the page stayed white. */
+body,
+body.cm-root { background: var(--nd-field); }
+
+/* Bands invert: on a tinted page they read as white surfaces, which keeps the
+   alternating rhythm the layout was built around. */
+.nd-well-band {
+  background: var(--nd-surface);
+  border-top: 1px solid var(--cm-border-default);
+  border-bottom: 1px solid var(--cm-border-default);
+}
+
+/* Page and article heads sit on the surface so the masthead reads as one
+   block with the topbar above it. */
+.nd-pagehead,
+.nd-post__head {
+  background: var(--nd-surface);
+}
+
+/* The one accented band. Reserved for the question and answer sets, which are
+   a distinct kind of content and benefit from being visibly set apart. */
+.nd-faqband {
+  background: var(--nd-tint);
+  border-top: 1px solid var(--nd-tint-border);
+  border-bottom: 1px solid var(--nd-tint-border);
+}
+.nd-faqband .nd-sechead { border-bottom-color: var(--nd-tint-border); }
+.nd-faqband .nd-faq__item { border-bottom-color: var(--nd-tint-border); }
+
+/* Story head keeps its own tint, one step up from the field so the medallion
+   has something to sit against. */
+.nd-story__head { background: var(--nd-tint); border-bottom-color: var(--nd-tint-border); }
+
+/* Long-form reading gets a white sheet on the field. This is the survey
+   precedent applied literally: the text becomes a separate, quiet space. */
+.nd-story__grid,
+.nd-post__body,
+.nd-post .nd-source,
+.nd-story .nd-prevnext {
+  background: var(--nd-surface);
+}
+/* The article sheet ends at the source line. What follows is navigation, so
+   the two link cards stand on the field rather than on a panel that has no
+   edge of its own. */
+.nd-post .nd-prevnext { background: none; border-top: none; padding-top: 24px; }
+.nd-story__grid {
+  border-inline: 1px solid var(--cm-border-default);
+  border-bottom: 1px solid var(--cm-border-default);
+  border-radius: 0 0 var(--cm-radius-lg) var(--cm-radius-lg);
+  padding-inline: 32px;
+}
+/* The article sheet. Padding is 32px so the content box lands on 748px, which
+   is the width the photograph rows were packed against. */
+.nd-post__body {
+  border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-lg) var(--cm-radius-lg) 0 0;
+  border-bottom: none;
+  padding: 40px 32px 24px;
+  margin-top: 40px;
+}
+.nd-post .nd-source {
+  border: 1px solid var(--cm-border-default);
+  border-radius: 0 0 var(--cm-radius-lg) var(--cm-radius-lg);
+  margin-top: 0 !important;
+  padding: 18px 32px;
+}
+.nd-post__body + .nd-article .nd-source { margin-top: 0 !important; }
+
+/* Table heads take the well, which is now neutral.100 and reads clearly
+   against the card. Header text is body weight, not muted, so it measures
+   6.81:1 there. */
+.cm-table thead th { background: var(--cm-bg-well); }
+
+/* Cards and plates take the surface so they lift off the field. */
+.nd-letter,
+.nd-kathai__card,
+.nd-related__card,
+.nd-prevnext__link { background: var(--nd-surface); }
+.nd-kathai__card:hover,
+.nd-related__card:hover,
+.nd-prevnext__link:hover { background: var(--cm-bg-well); }
+
+@media (max-width: 1080px) {
+  .nd-story__grid { padding-inline: 22px; }
+  .nd-post__body { padding: 30px 22px 18px; }
+  .nd-post .nd-source { padding: 16px 22px; }
+}
+
+/* ---- Collection hub ---- */
+.nd-colls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.nd-coll {
+  display: flex; flex-direction: column; padding: 26px 28px; color: inherit;
+  background: var(--nd-surface); border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-lg);
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-coll:hover { text-decoration: none; background: var(--nd-tint); border-color: var(--nd-tint-border); }
+.nd-coll__month {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--cm-text-muted);
+}
+.nd-coll__title {
+  margin-top: 7px; font-size: 20px; line-height: 1.4; font-weight: 600;
+  color: var(--cm-text-primary); letter-spacing: -0.01em;
+}
+.nd-coll:hover .nd-coll__title { color: var(--cm-text-accent); }
+.nd-coll__meta {
+  margin-top: 14px; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13.5px; color: var(--cm-text-muted); font-variant-numeric: tabular-nums;
+}
+.nd-coll__meta svg { color: var(--cm-green-700); }
+.nd-coll__go { margin-top: 16px; color: var(--cm-green-700); }
+.nd-transnote--drip { background: var(--nd-tint); border-color: var(--nd-tint-border); }
+.nd-transnote--drip svg { color: var(--cm-green-700); }
+@media (max-width: 620px) { .nd-colls { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- Calendar: kind badge on the merged upcoming list ---- */
+.nd-kind {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 9px;
+  font-size: 12px; font-weight: 700; border-radius: var(--cm-radius-sm);
+  white-space: nowrap;
+}
+.nd-kind--moon { background: var(--cm-accent-wash); color: var(--cm-text-accent); }
+.nd-kind--mem { background: var(--cm-neutral-100); color: var(--cm-text-body); }
+.nd-cal__lede { margin: -6px 0 14px; font-size: 13.5px; color: var(--cm-text-muted); }
+.nd-cal__since { color: var(--cm-text-muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Events: running order, timeline thumbnails, captioned gallery ---- */
+.nd-steps--run li { padding-bottom: 20px; }
+.nd-steps--run .nd-steps__body { font-size: 14.5px; }
+
+.nd-timeline li { position: relative; padding-left: 30px; }
+.nd-timeline__thumb {
+  float: right; width: 96px; height: 72px; margin: 0 0 10px 18px;
+  border-radius: var(--cm-radius-md); overflow: hidden;
+  border: 1px solid var(--cm-border-default); background: var(--cm-bg-well);
+}
+.nd-timeline__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.nd-timeline li::after { content: ""; display: block; clear: both; }
+
+.nd-gallery figcaption { display: flex; flex-direction: column; gap: 3px; }
+.nd-gallery figcaption a { color: var(--cm-text-body); font-weight: 600; }
+.nd-gallery figcaption a:hover { color: var(--cm-text-accent); }
+.nd-gallery figcaption span { color: var(--cm-text-muted); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 620px) {
+  .nd-timeline__thumb { width: 72px; height: 54px; margin-left: 12px; }
+}
+
+/* ---- Constitution facts ---- */
+.nd-stat--const .nd-stat__value { font-size: 27px; letter-spacing: -0.01em; }
+.nd-timeline--const { margin-top: 30px; }
+.nd-timeline--const li { padding-bottom: 18px; }
+.nd-timeline--const .nd-timeline__title { font-weight: 500; font-size: 15px; }
+
+/* ---- Tabs ---- */
+.nd-tabs__list {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--cm-border-default); margin-bottom: 22px;
+}
+.nd-tab {
+  padding: 12px 14px 10px; margin-bottom: -2px;
+  font-family: inherit; font-size: 14px; line-height: 20px; font-weight: 500;
+  color: var(--cm-text-muted); background: transparent;
+  border: 0; border-bottom: 2px solid transparent; cursor: pointer;
+}
+.nd-tab:hover { color: var(--cm-text-primary); }
+.nd-tab[aria-selected="true"] {
+  font-weight: 700; color: var(--cm-text-accent);
+  border-bottom-color: var(--cm-action-primary);
+}
+.nd-tab:focus-visible {
+  outline: var(--cm-focus-ring-width) solid var(--cm-focus-ring);
+  outline-offset: calc(-1 * var(--cm-focus-ring-width));
+  border-radius: var(--cm-radius-sm);
+}
+
+/* ---- Show more ---- */
+.nd-more { display: none !important; }
+.nd-morebtn {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 16px;
+  margin-top: 16px; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--cm-text-accent); background: var(--nd-surface);
+  border: 1px solid var(--cm-border-strong); border-radius: var(--cm-radius-md);
+  cursor: pointer;
+}
+.nd-morebtn:hover { background: var(--cm-accent-wash); border-color: var(--cm-action-primary); }
+.nd-morebtn:focus-visible {
+  outline: var(--cm-focus-ring-width) solid var(--cm-focus-ring);
+  outline-offset: var(--cm-focus-ring-offset);
+}
+
+/* ---- Calendar subscription ---- */
+.nd-subscribe { display: flex; gap: 18px; padding: 22px 24px; margin: 26px 0 24px; }
+.nd-subscribe__mark {
+  width: 46px; height: 46px; flex: none; border-radius: var(--cm-radius-md);
+  background: var(--cm-accent-wash); color: var(--cm-green-800);
+  display: flex; align-items: center; justify-content: center;
+}
+.nd-subscribe__h { margin: 2px 0 0; font-size: 16px; font-weight: 600; color: var(--cm-text-primary); }
+.nd-subscribe__p { margin: 7px 0 0; font-size: 14.5px; line-height: 1.7; color: var(--cm-text-muted); max-width: 62ch; }
+.nd-subscribe__note {
+  display: flex; gap: 8px; align-items: flex-start;
+  margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--cm-text-muted);
+}
+.nd-subscribe__note svg { flex: none; margin-top: 2px; }
+.nd-subscribe__note code {
+  font-family: inherit; font-size: 12.5px; color: var(--cm-text-accent);
+  background: var(--cm-bg-well); padding: 1px 6px; border-radius: var(--cm-radius-sm);
+  word-break: break-all;
+}
+@media (max-width: 620px) { .nd-subscribe { flex-direction: column; gap: 14px; } }
+
+/* Constitution facts, inside the anniversaries panel */
+.nd-const { margin-top: 34px; padding-top: 28px; border-top: 2px solid var(--cm-border-default); }
+.nd-const__h { font-size: 17px; font-weight: 600; color: var(--cm-text-primary); margin: 0; }
+.nd-const__sub { margin: 7px 0 20px; font-size: 14px; color: var(--cm-text-muted); max-width: 62ch; }
+
+/* ==========================================================================
+ * Print
+ *
+ * A printed page has no navigation, no hover and no second visit, so the
+ * chrome goes and what is left is the argument: heading, prose, tables of
+ * terms, citations, questions and answers. Canopy is border-first already,
+ * which is what print wants; the tinted grounds drop out and the borders do
+ * the separating on their own.
+ *
+ * Placed last so it beats the earlier print stub without needing !important.
+ * ==========================================================================*/
+@media print {
+  @page { margin: 16mm 14mm; }
+
+  html, body, .cm-root {
+    background: #ffffff !important;
+    color: #1a231d;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  /* Chrome, controls and onward links: none of it survives a printer. */
+  .nd-topbar, .nd-footer, .nd-skip, .nd-lang, .nd-navtoggle, .nd-nav,
+  .nd-hero__actions, .nd-copy, .nd-prevnext, .nd-subscribe,
+  .nd-search, .nd-filters, .nd-more, .nd-shot__zoom, .nd-viewer,
+  .nd-grid--aside > aside, .nd-story__aside, .nd-sechead a, .nd-cta,
+  /* Whole sections, not just their cards: hiding the grid on its own left
+     the heading standing over an empty page. */
+  section[aria-labelledby="rel-head"],
+  section[aria-labelledby="more-head"] {
+    display: none !important;
+  }
+
+  /* Bands and sheets flatten. The page itself is now the sheet. */
+  .nd-section, .nd-pagehead, .nd-post__head, .nd-well-band, .nd-faqband,
+  .nd-story__head, .nd-post__body, .nd-story__grid, .nd-post .nd-source {
+    background: transparent !important;
+    border: none !important;
+    padding-left: 0; padding-right: 0;
+  }
+  .nd-section { padding: 0; }
+  .nd-pagehead, .nd-post__head { padding: 0 0 14pt; border-bottom: 1pt solid #b9c4bc !important; }
+  .nd-shell, .nd-reading, .nd-article { max-width: none; padding: 0; margin: 0; }
+  .nd-grid--aside { display: block; }
+
+  h1 { font-size: 20pt; line-height: 1.2; }
+  h2 { font-size: 13pt; margin: 18pt 0 6pt; }
+  h3 { font-size: 11pt; }
+  p, li, dd { orphans: 3; widows: 3; }
+
+  /* Keep a term with its definition, a question with its answer, a picture
+     with its caption. A break through the middle of any of them loses the
+     pairing that made it worth setting that way. */
+  h1, h2, h3 { break-after: avoid-page; }
+  .nd-deflist > div, .nd-faq__item, .nd-callout, .nd-alert,
+  .nd-fig, .nd-shot, .nd-steps li, .nd-numlist li, .nd-cite {
+    break-inside: avoid-page;
+  }
+  .nd-deflist > div { grid-template-columns: 150pt minmax(0, 1fr); padding: 7pt 0; }
+  .nd-deflist > div, .nd-faq__item { border-bottom: 0.5pt solid #ccd5cf !important; }
+
+  /* The two blocks whose meaning is carried by their ground keep a rule
+     instead, which a printer renders the same on every machine. */
+  .nd-callout, .nd-alert {
+    background: transparent !important;
+    border: none !important;
+    border-left: 2pt solid #2f6b45 !important;
+    padding: 2pt 0 2pt 12pt;
+  }
+  .nd-alert svg, .nd-callout svg, .nd-cite svg { display: none; }
+  .nd-cite { font-size: 9pt; }
+
+  /* Photographs stack and stay whole. A justified row printed small is three
+     thumbnails and a page break through the middle of one of them. */
+  .nd-gallery__row { display: block; }
+  .nd-gallery__row > .nd-shot { width: 100%; margin-bottom: 8pt; aspect-ratio: var(--ar); }
+  .nd-gallery__gap { display: none; }
+  .nd-shot, .nd-fig { max-width: 100% !important; }
+
+  a { color: inherit; text-decoration: none; }
+  /* A printed link is a dead end unless the address comes with it. Internal
+     paths are expanded against the site so the reader can type them. */
+  .nd-prose a[href^="http"]::after { content: " (" attr(href) ")"; }
+  .nd-prose a[href^="/"]::after { content: " (niladhamma.co.in" attr(href) ")"; }
+  .nd-prose a::after { font-size: 8.5pt; color: #55625a; word-break: break-all; }
+  .nd-breadcrumb, .nd-tags { display: none; }
+}

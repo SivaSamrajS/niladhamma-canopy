@@ -1,0 +1,30 @@
+name: Daily release
+
+# Netlify builds on push, but the story collections need a build each day even
+# when nothing has been committed. This job does nothing but ask Netlify to
+# rebuild; the build itself, and the release gate, run there.
+#
+# 18:40 UTC is 00:10 IST the next day. GitHub's scheduler can lag by several
+# minutes under load, and lag that ran early would leak a story, so there is a
+# ten minute margin after midnight in Chennai.
+
+on:
+  schedule:
+    - cron: "40 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Netlify to rebuild
+        run: |
+          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
+            echo "NETLIFY_BUILD_HOOK secret is not set." >&2
+            echo "Netlify: Site settings > Build & deploy > Build hooks > Add build hook." >&2
+            exit 1
+          fi
+          code=$(curl -sS -o /dev/null -w "%{http_code}" -X POST -d '{}' \
+                 "${{ secrets.NETLIFY_BUILD_HOOK }}")
+          echo "Netlify build hook returned HTTP $code"
+          [ "$code" -ge 200 ] && [ "$code" -lt 300 ]
