@@ -14,6 +14,11 @@
   # Netlify builds in UTC. build.py converts to Asia/Kolkata itself, so a story
   # is never released early; this is set only so logs read in local time.
   TZ = "Asia/Kolkata"
+  # Netlify fails a build when the value of a variable marked secret appears
+  # in the repository. The writers' sign-in name is the site's own name, which
+  # is on every page, so it is left out of that scan. The password and the
+  # GitHub token are still scanned.
+  SECRETS_SCAN_OMIT_KEYS = "WRITER_USERNAME"
 
 # The writers' desk (/write/) publishes through these. They commit a post to
 # the repository, and that push is what starts the build that renders it.
