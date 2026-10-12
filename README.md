@@ -325,6 +325,59 @@ The venue address appears in three places (footer, About aside, Contact and
 Events cards) and in the `Place` node. It is defined once, as `VENUE_*` at the
 top of `build.py`.
 
+## The writers' desk
+
+`/write/` (and `/en/write/`) is where members sign in with the shared username
+and password and publish a post: title, sub-heading, author, date, tags, a body
+with headings, bold, italic, links, quotations and lists, photographs, and
+YouTube videos. It is linked from the footer and is `noindex`.
+
+The site stays static. Publishing is a commit:
+
+```
+assets/js/write.js            the editor; sends blocks, not HTML
+netlify/functions/write-*.mjs sign-in, and list / read / publish / withdraw
+netlify/lib/write.mjs         sessions, sanitising, the GitHub commit
+data/blog/<date>-<id>.json    one file per member post, written by the function
+assets/img/pathivu/m*.jpg     its photographs, with tile/ and thumb/ copies
+```
+
+A publish writes the post and its photographs in one commit through the GitHub
+API. That push starts the normal Netlify build, and `build.py` renders the post
+with the same page, photograph rows and viewer as the archive. A post is live
+about two minutes after Publish is pressed. Editing rewrites the same file;
+withdrawing deletes it and its photographs.
+
+Photographs are reduced in the browser to 1800px, plus the 720px display copy
+and the 480 by 360 card thumbnail the archive keeps, because the deploy host
+has no Pillow to make them. Their pixel sizes travel in the post file for the
+same reason. Video is a YouTube link, embedded from `youtube-nocookie.com`.
+
+Settings live in Netlify (Site configuration > Environment variables), never in
+the repository:
+
+| Variable | Value |
+| --- | --- |
+| `WRITER_USERNAME` | the shared sign-in name |
+| `WRITER_PASSWORD` | the shared password |
+| `WRITER_GITHUB_TOKEN` | a fine-grained GitHub token for this repository only, with Contents set to read and write |
+
+Changing the username or the password signs every writer out, since sessions
+are signed with a key derived from both. A redeploy is needed for a changed
+variable to reach the functions.
+
+Three things are deliberate:
+
+- **Text is reduced twice.** The function keeps only `b`, `i`, `u`, `br` and
+  `https` or `mailto` links, and `build.py` applies the same rule again when it
+  renders, so a file edited by hand cannot put markup on a page.
+- **A post cannot break the deploy.** The audit fails a build on a repeated
+  title or description, a skipped heading level, an `http://` link or a missing
+  image. Each of those is normalised in `build.py`, and a malformed file in
+  `data/blog/` is skipped with a line in the build log.
+- **Posts are published at once.** Anyone holding the password can put a post
+  on the public site. There is no approval queue.
+
 ## Known gaps
 
 - **Download links are not wired.** The original page's file links were not

@@ -15,6 +15,21 @@
   # is never released early; this is set only so logs read in local time.
   TZ = "Asia/Kolkata"
 
+# The writers' desk (/write/) publishes through these. They commit a post to
+# the repository, and that push is what starts the build that renders it.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# publish = "." serves the repository root, and the function source is not a
+# page. The functions themselves are deployed separately and answer at
+# /api/write/*, so this hides nothing that is used.
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
 # Canonical host. Without this, the site answers on both the apex and www and
 # every canonical URL points at only one of them.
 [[redirects]]

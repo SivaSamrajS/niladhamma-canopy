@@ -1346,6 +1346,158 @@ body.cm-root { background: var(--nd-field); }
 .nd-const__sub { margin: 7px 0 20px; font-size: 14px; color: var(--cm-text-muted); max-width: 62ch; }
 
 /* ==========================================================================
+ * Member posts and the writers' desk
+ *
+ * A member post is rendered by the same sheet as an archive post. What is
+ * added here is what the archive never had: headings and quotations inside a
+ * body, an embedded video, a sub-heading under the title, and the form the
+ * posts are written in.
+ * ==========================================================================*/
+.nd-post__sub {
+  margin: 14px 0 0; max-width: 640px;
+  font-size: 18px; line-height: 1.6; color: var(--cm-text-body);
+}
+.nd-post__body > h2,
+.nd-post__body > h3,
+.nd-post__body > blockquote { max-width: 640px; margin-inline: auto; }
+.nd-post__body > h2:first-child,
+.nd-post__body > h3:first-child { margin-top: 0; }
+
+/* 16:9, held by the box so the page does not move when the player arrives. */
+.nd-video {
+  margin: 30px auto; max-width: 748px; aspect-ratio: 16 / 9;
+  border: 1px solid var(--cm-border-default); border-radius: var(--cm-radius-lg);
+  overflow: hidden; background: var(--cm-bg-well);
+}
+.nd-video iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+.nd-filters--topics { margin-bottom: 14px; }
+.nd-filters__label {
+  font-size: 13px; font-weight: 600; color: var(--cm-text-muted); margin-right: 4px;
+}
+
+.nd-write__card { padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+.nd-write__card h2 { font-size: 21px; line-height: 28px; letter-spacing: -0.01em; }
+.nd-write__login { max-width: 420px; margin-inline: auto; }
+.nd-write__login[hidden] { display: none; }
+.nd-write__cardhead {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-bottom: 14px; border-bottom: 2px solid var(--cm-border-default);
+}
+.nd-write__status { margin-bottom: 20px; align-items: center; }
+.nd-write__status[hidden] { display: none; }
+.nd-write__status svg { flex: none; }
+.nd-write__status a { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.nd-write__opt { font-weight: 400; color: var(--cm-text-muted); }
+.nd-write__pair { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 16px; }
+.nd-write .cm-input { min-height: 48px; font-size: 16px; }
+.nd-write .cm-btn[hidden] { display: none; }
+
+/* The editor is one bordered box: tools on a well, the page under them. */
+.nd-write__editor {
+  border: 1px solid var(--cm-border-strong); border-radius: var(--cm-radius-md);
+  background: var(--cm-bg-app);
+}
+.nd-write__editor:focus-within { border-color: var(--cm-action-primary); }
+.nd-write__tools {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 8px;
+  background: var(--cm-bg-well); border-bottom: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-md) var(--cm-radius-md) 0 0;
+  position: sticky; top: var(--nd-topbar); z-index: 2;
+}
+.nd-write__tool {
+  height: 36px; min-width: 36px; padding: 0 11px;
+  font: inherit; font-size: 13.5px; font-weight: 500; color: var(--cm-text-body);
+  background: var(--cm-bg-app); border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-sm); cursor: pointer;
+  transition: background var(--cm-duration-fast) var(--cm-ease-standard);
+}
+.nd-write__tool:hover { background: var(--cm-accent-wash); }
+.nd-write__tool:focus-visible {
+  outline: var(--cm-focus-ring-width) solid var(--cm-focus-ring);
+  outline-offset: var(--cm-focus-ring-offset);
+}
+.nd-write__tool--glyph { font-family: Georgia, 'Times New Roman', serif; font-size: 16px; }
+.nd-write__sep { width: 1px; height: 22px; margin: 0 4px; background: var(--cm-border-strong); }
+.nd-write__linkrow {
+  display: flex; gap: 8px; padding: 8px;
+  background: var(--cm-accent-wash); border-bottom: 1px solid var(--nd-tint-border);
+}
+.nd-write__linkrow[hidden] { display: none; }
+.nd-write__linkrow .cm-input { flex: 1; min-width: 0; }
+.nd-write__linkrow .cm-btn { height: 48px; flex: none; }
+
+.nd-write__body { min-height: 340px; padding: 20px; outline: none; overflow-wrap: anywhere; }
+.nd-write__body > :first-child { margin-top: 0; }
+.nd-write__body a { text-decoration: underline; text-underline-offset: 2px; }
+
+.nd-write__fig, .nd-write__video {
+  display: grid; grid-template-columns: 132px minmax(0, 1fr) auto; align-items: center;
+  gap: 12px; margin: 14px 0; padding: 10px;
+  background: var(--cm-bg-well); border: 1px solid var(--cm-border-default);
+  border-radius: var(--cm-radius-md); font-size: 14px; line-height: 1.4;
+  user-select: none; -webkit-user-select: none;
+}
+.nd-write__fig img, .nd-write__video img {
+  width: 132px; height: 99px; object-fit: cover; display: block;
+  border-radius: var(--cm-radius-sm); background: var(--cm-neutral-200);
+}
+.nd-write__video img { height: 74px; }
+.nd-write__fig--blank img { visibility: hidden; }
+.nd-write__busy { display: none; color: var(--cm-text-muted); }
+.nd-write__fig[data-state="busy"] .nd-write__busy { display: block; }
+.nd-write__fig[data-state="busy"] .cm-input { display: none; }
+.nd-write__fig[data-state="busy"] img { opacity: 0.5; }
+.nd-write__x {
+  height: 36px; padding: 0 12px; font: inherit; font-size: 13px; font-weight: 600;
+  color: var(--cm-danger-text); background: var(--cm-bg-app);
+  border: 1px solid var(--cm-border-default); border-radius: var(--cm-radius-sm);
+  cursor: pointer;
+}
+.nd-write__x:hover { border-color: var(--cm-border-strong); }
+
+.nd-write__media { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.nd-write__pick { height: 48px; cursor: pointer; flex: none; }
+.nd-write__pick:focus-within {
+  outline: var(--cm-focus-ring-width) solid var(--cm-focus-ring);
+  outline-offset: var(--cm-focus-ring-offset);
+}
+.nd-write__videorow { display: flex; gap: 8px; flex: 1; min-width: min(100%, 320px); }
+.nd-write__videorow .cm-input { flex: 1; min-width: 0; }
+.nd-write__videorow .cm-btn { height: 48px; flex: none; }
+.nd-write__actions {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  padding-top: 20px; border-top: 1px solid var(--cm-border-default);
+}
+
+.nd-write__listhead { margin-top: 48px; }
+.nd-write__posts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.nd-write__post {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 18px;
+}
+.nd-write__posttext { min-width: 0; }
+.nd-write__posttext a { font-weight: 600; color: var(--cm-text-strong); }
+.nd-write__posttext p { margin: 4px 0 0; font-size: 13.5px; color: var(--cm-text-muted); }
+.nd-write__postacts { display: flex; gap: 8px; flex: none; }
+.nd-write__del { color: var(--cm-danger-text); }
+.nd-write__del[data-armed] { background: var(--cm-danger-soft); font-weight: 700; }
+.nd-write__none { color: var(--cm-text-muted); padding: 8px 0; }
+
+@media (max-width: 640px) {
+  .nd-write__card { padding: 20px 16px; }
+  .nd-write__pair { grid-template-columns: minmax(0, 1fr); }
+  .nd-write__body { padding: 16px 14px; min-height: 280px; }
+  .nd-write__fig, .nd-write__video { grid-template-columns: 88px minmax(0, 1fr); }
+  .nd-write__fig img, .nd-write__video img { width: 88px; height: 66px; }
+  .nd-write__video img { height: 50px; }
+  .nd-write__x { grid-column: 1 / -1; }
+  .nd-write__videorow { flex-wrap: wrap; }
+  .nd-write__post { flex-direction: column; align-items: stretch; }
+  .nd-post__sub { font-size: 16.5px; }
+}
+
+/* ==========================================================================
  * Print
  *
  * A printed page has no navigation, no hover and no second visit, so the

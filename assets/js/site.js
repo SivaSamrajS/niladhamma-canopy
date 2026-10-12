@@ -51,6 +51,9 @@
     var search = document.querySelector('[data-search]');
     var empty = document.querySelector('[data-empty]');
     var year = 'all';
+    // Topics exist only once member posts carry tags; the row is absent before.
+    var topics = Array.prototype.slice.call(document.querySelectorAll('[data-tagfilters] [data-tag]'));
+    var topic = '';
 
     function apply() {
       var q = (search && search.value || '').trim().toLowerCase();
@@ -58,12 +61,25 @@
       cards.forEach(function (card) {
         var okYear = year === 'all' || card.getAttribute('data-year') === year;
         var okText = !q || card.getAttribute('data-title').indexOf(q) !== -1;
-        var show = okYear && okText;
+        var okTopic = !topic ||
+          (card.getAttribute('data-tags') || '').indexOf('|' + topic + '|') !== -1;
+        var show = okYear && okText && okTopic;
         card.classList.toggle('nd-hidden', !show);
         if (show) shown++;
       });
       if (empty) empty.classList.toggle('nd-hidden', shown !== 0);
     }
+
+    topics.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        // a second press on the chosen topic clears it
+        topic = topic === chip.getAttribute('data-tag') ? '' : chip.getAttribute('data-tag');
+        topics.forEach(function (c) {
+          c.setAttribute('aria-pressed', String(c.getAttribute('data-tag') === topic));
+        });
+        apply();
+      });
+    });
 
     chips.forEach(function (chip) {
       chip.addEventListener('click', function () {

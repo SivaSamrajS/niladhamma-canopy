@@ -18,6 +18,7 @@ project root; the pages will not resolve over file://.
 
 import collections
 import glob
+import html as htmllib
 import json
 import os
 import re
@@ -274,6 +275,11 @@ UI = {
     "copied":      {"ta": "நகலெடுக்கப்பட்டது", "en": "Link copied"},
     "viewer":      {"ta": "படக் காட்சி", "en": "Photograph viewer"},
     "close":       {"ta": "மூடு", "en": "Close"},
+    # Member posts, written at the writers' desk.
+    "written_by":  {"ta": "எழுதியவர்", "en": "Written by"},
+    "video":       {"ta": "காணொளி", "en": "Video"},
+    "topics":      {"ta": "தலைப்புகள்", "en": "Topics"},
+    "write_link":  {"ta": "எழுத்தாளர் நுழைவு", "en": "Writers' sign in"},
 }
 
 
@@ -851,6 +857,7 @@ def footer(L):
       <span>&copy; 2026 {SITE_FULL} &middot; {SITE_EN_FULL}</span>
       <span>{MOTTO_EN} &middot; {MOTTO_LINE_EN}</span>
       <span class="nd-footer__lang">
+        <a href="{u("/write/index.html", L)}" rel="nofollow">{U("write_link", L)}</a>
         <a href="{u("/index.html", LANGS[L]["other"])}" hreflang="{LANGS[L]["other"]}"
            lang="{LANGS[LANGS[L]["other"]]["html"]}">
           {icon("globe", 14)} {LANGS[L]["other_name"]}</a>
@@ -1114,6 +1121,157 @@ def compose_en(blocks, paras, caps):
 
 
 # ==========================================================================
+# Member posts
+#
+# Posts written at the writers' desk (/write/) are committed one file each to
+# data/blog/ by netlify/functions. They arrive as blocks already, so nothing is
+# parsed, but every string is still reduced here to the same small set of
+# inline tags. The function does that too; doing it again at render time means
+# a file edited by hand cannot put markup on a page.
+#
+# A build that fails takes the daily story release down with it, so one bad
+# file is skipped with a line in the log rather than raised.
+# ==========================================================================
+
+BLOG_DIR = "blog"
+BLOG_SLUG = re.compile(r"^\d{4}-\d{2}-\d{2}-[0-9a-f]{6}$")
+BLOG_IMG = re.compile(r"^/assets/img/pathivu/m[0-9a-f]{14}\.jpg$")
+BLOG_VIDEO = re.compile(r"^[A-Za-z0-9_-]{11}$")
+BLOG_LINK = re.compile(r"^(https://|mailto:)[^\s<>\"]+$", re.I)
+
+
+class _Inline(HTMLParser):
+    """Writer markup to the inline tags a post may carry."""
+
+    KEEP = {"b": "b", "strong": "b", "i": "i", "em": "i", "u": "u"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.out, self.open = [], []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "br":
+            if self.out and self.out[-1] != "<br>":
+                self.out.append("<br>")
+        elif tag in self.KEEP:
+            self.out.append(f"<{self.KEEP[tag]}>")
+            self.open.append(self.KEEP[tag])
+        elif tag == "a" and "a" not in self.open:
+            href = re.sub(r"^http://", "https://", (dict(attrs).get("href") or "").strip(),
+                          flags=re.I)
+            if BLOG_LINK.match(href):
+                rel = ' rel="nofollow noopener"' if "://" in href else ""
+                self.out.append(f'<a href="{esc(href)}"{rel}>')
+                self.open.append("a")
+
+    def handle_startendtag(self, tag, attrs):
+        if tag == "br":
+            self.handle_starttag(tag, attrs)
+
+    def handle_endtag(self, tag):
+        name = self.KEEP.get(tag) or ("a" if tag == "a" else None)
+        if name and name in self.open:
+            while self.open:
+                top = self.open.pop()
+                self.out.append(f"</{top}>")
+                if top == name:
+                    break
+
+    def handle_data(self, data):
+        self.out.append(esc(re.sub(r"\s+", " ", data)))
+
+
+def inline_safe(s):
+    p = _Inline()
+    p.feed(str(s or ""))
+    p.close()
+    while p.open:
+        p.out.append(f"</{p.open.pop()}>")
+    while p.out and p.out[-1] == "<br>":
+        p.out.pop()
+    return "".join(p.out).strip()
+
+
+def bare(s):
+    """Plain text of sanitised inline markup."""
+    return re.sub(r"\s+", " ", htmllib.unescape(STRIP_TAGS.sub(" ", s))).strip()
+
+
+def one_line(s, limit):
+    """A title, a name, a tag. These are dropped into templates that were
+    written for the archive's plain strings, so the characters that would end
+    an attribute or open a tag are taken out rather than escaped twice."""
+    s = re.sub(r"<[^<>]*>", "", str(s or "")).replace("<", "").replace(">", "")
+    return re.sub(r"\s+", " ", s.replace('"', "'")).strip()[:limit]
+
+
+def blog_blocks(raw):
+    out, seen_h2 = [], False
+    for b in raw if isinstance(raw, list) else []:
+        if not isinstance(b, list) or not b:
+            continue
+        kind = b[0]
+        if kind in ("p", "quote") and len(b) > 1:
+            text = inline_safe(b[1])
+            if bare(text):
+                out.append((kind, text))
+        elif kind in ("h2", "h3") and len(b) > 1:
+            text = esc(bare(inline_safe(b[1])))
+            if text:
+                # A sub-heading with no heading above it would skip a level
+                # under the page title, which the deploy audit rejects.
+                kind = kind if seen_h2 else "h2"
+                seen_h2 = True
+                out.append((kind, text))
+        elif kind in ("ul", "ol") and len(b) > 1 and isinstance(b[1], list):
+            items = [x for x in (inline_safe(i) for i in b[1]) if bare(x)]
+            if items:
+                out.append((kind, items))
+        elif kind == "fig" and len(b) > 1 and BLOG_IMG.match(str(b[1])):
+            # A photograph that is not in the repository would be a broken
+            # image on the page and an error in the audit.
+            if os.path.exists(os.path.join(ROOT, b[1].lstrip("/"))):
+                out.append(("fig", b[1], inline_safe(b[2] if len(b) > 2 else "")))
+        elif kind == "video" and len(b) > 1 and BLOG_VIDEO.match(str(b[1])):
+            out.append(("video", b[1]))
+    return out
+
+
+def load_blog():
+    posts = []
+    for f in sorted(glob.glob(os.path.join(DATA, BLOG_DIR, "*.json"))):
+        try:
+            with open(f, encoding="utf-8") as fh:
+                d = json.load(fh)
+            slug = os.path.basename(f)[:-5]
+            date = str(d.get("date", ""))
+            title = one_line(d.get("title"), 160)
+            if not (BLOG_SLUG.match(slug) and re.match(r"^\d{4}-\d{2}-\d{2}$", date)
+                    and 1 <= int(date[5:7]) <= 12 and title):
+                raise ValueError("slug, date or title is not usable")
+            blocks = blog_blocks(d.get("blocks"))
+            for src, size in (d.get("sizes") or {}).items():
+                if BLOG_IMG.match(src) and src not in _sizes and len(size) == 2 \
+                        and all(isinstance(n, int) and n > 0 for n in size):
+                    _sizes[src] = tuple(size)
+            text = " ".join(bare(x) for b in blocks if b[0] in ("p", "quote", "ul", "ol")
+                            for x in (b[1] if isinstance(b[1], list) else [b[1]]))
+            posts.append({
+                "slug": slug, "title": title, "date": date, "member": True,
+                "subtitle": one_line(d.get("subtitle"), 240),
+                "author": one_line(d.get("author"), 80),
+                "labels": [t for t in (one_line(x, 40) for x in d.get("tags") or []) if t][:8],
+                "blocks": blocks, "html": "", "origin": "",
+                # Excerpts are placed in pages unescaped, as the archive's are.
+                "text": text.replace("<", "").replace(">", ""),
+                "imgs": [b[1] for b in blocks if b[0] == "fig"],
+            })
+        except Exception as e:
+            print(f"  skipped {os.path.relpath(f, ROOT)}: {e}")
+    return posts
+
+
+# ==========================================================================
 # Photographs
 #
 # Every archive image is a local file, so its true pixel size is knowable at
@@ -1321,8 +1479,21 @@ def render_body(blocks, L):
             klass = ' class="nd-prose__lede"' if lead else ""
             out.append(f"<p{klass}>{payload}</p>")
             lead = False
+        elif kind in ("h2", "h3"):
+            out.append(f"<{kind}>{payload}</{kind}>")
+        elif kind == "quote":
+            out.append(f"<blockquote>{payload}</blockquote>")
+        elif kind == "video":
+            # The privacy-enhanced host: nothing is set until the reader plays.
+            out.append(
+                f'<div class="nd-video"><iframe '
+                f'src="https://www.youtube-nocookie.com/embed/{payload}" '
+                f'title="{U("video", L)}" loading="lazy" allowfullscreen '
+                f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; '
+                f'web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>')
         else:
-            out.append("<ul>" + "".join(f"<li>{x}</li>" for x in payload) + "</ul>")
+            tag = "ol" if kind == "ol" else "ul"
+            out.append(f"<{tag}>" + "".join(f"<li>{x}</li>" for x in payload) + f"</{tag}>")
         i += 1
     return "".join(out)
 
@@ -2069,11 +2240,23 @@ def build_post(post, prev_p, next_p, related_posts, L):
              f'{U("photos" if n != 1 else "photo_one", L)}</span>') if n else ""
 
     # two posts in the archive share a title; the date separates them
-    seo_title = (title if not post.get(f"title_dup_{L}")
-                 else f"{title} ({fmt_date(post['date'], L)})")
+    seo_title = post.get(f"seo_title_{L}") or (
+        title if not post.get(f"title_dup_{L}")
+        else f"{title} ({fmt_date(post['date'], L)})")
+    member = post.get("member")
+    sub = (f'<p class="nd-post__sub">{esc(post["subtitle"])}</p>'
+           if member and post.get("subtitle") else "")
+    byline = (f'<span class="nd-postmeta__item">{icon("users", 15)} '
+              f'{esc(post["author"])}</span>') if member and post.get("author") else ""
+    if member:
+        who = esc(post.get("author") or (SITE_FULL if L == "ta" else SITE_EN_FULL))
+        source = f'{icon("users", 15)} {U("written_by", L)}: <strong>{who}</strong>'
+    else:
+        source = (f'{icon("external", 15)} {U("origin", L)}:\n        '
+                  f'<a href="{post["origin"]}" rel="noopener nofollow">niladhamma.co.in</a>')
     return head(
         seo_title, None,
-        post_desc(post, L), url, L,
+        post.get(f"seo_desc_{L}") or post_desc(post, L), url, L,
         og_image=post["imgs"][0] if post["imgs"] else None,
         jsonld=[crumb_ld(trail, L), {
             "@context": "https://schema.org", "@type": "Article",
@@ -2094,9 +2277,11 @@ def build_post(post, prev_p, next_p, related_posts, L):
       <div class="nd-article">
         {crumbs(trail, L)}
         <h1>{title}</h1>
+        {sub}
         <div class="nd-postmeta">
           <span class="nd-postmeta__item">{icon('calendar', 15)}
             <time datetime="{post['date']}">{fmt_date(post['date'], L)}</time></span>
+          {byline}
           <span class="nd-postmeta__item">{icon('clock', 15)}
             {read_minutes(post, L)} {U('read_min', L)}</span>
           {shots}
@@ -2118,8 +2303,7 @@ def build_post(post, prev_p, next_p, related_posts, L):
 
     <div class="nd-article">
       <p class="nd-source">
-        {icon('external', 15)} {U('origin', L)}:
-        <a href="{post['origin']}" rel="noopener nofollow">niladhamma.co.in</a>
+        {source}
       </p>
     </div>
 
@@ -2586,11 +2770,31 @@ def build_writings(posts, L):
         chips += (f'<button class="nd-chip" type="button" aria-pressed="false" '
                   f'data-year="{y}">{y} ({n})</button>')
 
+    # Topics come from member posts; the archive carries no labels. The row
+    # is left out until there is something to filter by.
+    tags = collections.Counter(t for p in posts if p.get("member") for t in p["labels"])
+    topics = "".join(
+        f'<button class="nd-chip" type="button" aria-pressed="false" '
+        f'data-tag="{esc(t.lower())}">{esc(t)} ({n})</button>'
+        for t, n in sorted(tags.items(), key=lambda kv: (-kv[1], kv[0]))[:14])
+    topic_row = (f'<div class="nd-filters nd-filters--topics" data-tagfilters '
+                 f'aria-label="{U("topics", L)}"><span class="nd-filters__label">'
+                 f'{U("topics", L)}</span>{topics}</div>') if topics else ""
+
+    def hay(p):
+        extra = p["labels"] + [p.get("author", "")] if p.get("member") else []
+        return esc(" ".join([post_title(p, L)] + extra).lower())
+
+    def tagset(p):
+        if not (p.get("member") and p["labels"]):
+            return ""
+        return ' data-tags="|' + esc("|".join(t.lower() for t in p["labels"])) + '|"'
+
     cards = ""
     for p in posts:
         cards += f"""
       <a class="cm-card nd-mediacard" href="{u(post_url(p), L)}"
-         data-year="{p['date'][:4]}" data-title="{esc(post_title(p, L).lower())}">
+         data-year="{p['date'][:4]}" data-title="{hay(p)}"{tagset(p)}>
         <div class="nd-mediacard__media"><img src="{post_thumb(p)}" alt="" loading="lazy"></div>
         <div class="nd-mediacard__body">
           <p class="nd-mediacard__meta">{fmt_date(p['date'], L)}</p>
@@ -2617,6 +2821,7 @@ def build_writings(posts, L):
         <p>{c("writings.all.sub", L)}</p>
       </div>
     </div>
+    {topic_row}
     <div class="nd-row" style="justify-content:space-between;margin-bottom:24px">
       <div class="nd-filters" data-filters>{chips}</div>
       <div class="cm-field" style="max-width:260px;width:100%">
@@ -3282,6 +3487,254 @@ def build_404(L):
 
 
 # ==========================================================================
+# The writers' desk
+#
+# A member signs in with the shared name and password, writes a post, and
+# publishes it. The page is only a form: assets/js/write.js talks to
+# netlify/functions, which commits the post to data/blog/ and so triggers the
+# build that renders it. Nothing works here without JavaScript, which the page
+# says rather than showing a form that cannot submit.
+# ==========================================================================
+
+WRITE = {
+    "h1":        {"ta": "எழுத்தாளர் மேசை", "en": "Writers' Desk"},
+    "meta":      {"ta": "நிலாதம்மா உறுப்பினர்கள் உள்நுழைந்து புதிய பதிவுகளை எழுதி "
+                        "வெளியிடும் பக்கம். படங்கள், YouTube காணொளிகள், குறிச்சொற்கள்.",
+                  "en": "Where Niladhamma members sign in to write and publish new "
+                        "posts, with photographs, YouTube videos and tags."},
+    "lede":      {"ta": "உள்நுழைந்து, புதிய பதிவை எழுதி வெளியிடுங்கள். வெளியிட்ட "
+                        "பதிவு சுமார் இரண்டு நிமிடங்களில் தளத்தில் தோன்றும்.",
+                  "en": "Sign in, write a post and publish it. A published post "
+                        "appears on the site in about two minutes."},
+    "nojs":      {"ta": "இப்பக்கம் இயங்க JavaScript தேவை.",
+                  "en": "This page needs JavaScript to work."},
+    "login_h":   {"ta": "உள்நுழைவு", "en": "Sign in"},
+    "username":  {"ta": "பயனர் பெயர்", "en": "Username"},
+    "password":  {"ta": "கடவுச்சொல்", "en": "Password"},
+    "signin":    {"ta": "உள்நுழை", "en": "Sign in"},
+    "signout":   {"ta": "வெளியேறு", "en": "Sign out"},
+    "new_h":     {"ta": "புதிய பதிவு", "en": "New post"},
+    "edit_h":    {"ta": "பதிவைத் திருத்து", "en": "Edit post"},
+    "title":     {"ta": "தலைப்பு", "en": "Title"},
+    "subtitle":  {"ta": "துணைத் தலைப்பு", "en": "Sub-heading"},
+    "optional":  {"ta": "விருப்பம்", "en": "optional"},
+    "author":    {"ta": "எழுதியவர் பெயர்", "en": "Author name"},
+    "date":      {"ta": "தேதி", "en": "Date"},
+    "tags":      {"ta": "குறிச்சொற்கள்", "en": "Tags"},
+    "tags_hint": {"ta": "காற்புள்ளியால் பிரிக்கவும். எ.கா: பௌர்ணமி, தம்மம்",
+                  "en": "Separate with commas, for example: full moon, dhamma"},
+    "body":      {"ta": "பதிவு", "en": "Post"},
+    "body_hint": {"ta": "இங்கே எழுதுங்கள். படமும் காணொளியும் சுட்டி இருக்கும் "
+                        "இடத்திற்குக் கீழே சேரும்.",
+                  "en": "Write here. Photographs and videos are placed below "
+                        "wherever the cursor is."},
+    "t_p":       {"ta": "பத்தி", "en": "Paragraph"},
+    "t_h2":      {"ta": "தலைப்பு", "en": "Heading"},
+    "t_h3":      {"ta": "சிறு தலைப்பு", "en": "Small heading"},
+    "t_bold":    {"ta": "தடித்த எழுத்து", "en": "Bold"},
+    "t_italic":  {"ta": "சாய்ந்த எழுத்து", "en": "Italic"},
+    "t_quote":   {"ta": "மேற்கோள்", "en": "Quote"},
+    "t_ul":      {"ta": "புள்ளிப் பட்டியல்", "en": "Bullet list"},
+    "t_ol":      {"ta": "எண் பட்டியல்", "en": "Numbered list"},
+    "t_link":    {"ta": "இணைப்பு", "en": "Link"},
+    "link_ph":   {"ta": "இணைய முகவரி", "en": "Web address"},
+    "link_add":  {"ta": "இணை", "en": "Add link"},
+    "link_pick": {"ta": "முதலில் இணைப்பாக்க வேண்டிய சொற்களைத் தேர்ந்தெடுக்கவும்.",
+                  "en": "Select the words to turn into a link first."},
+    "photos":    {"ta": "படங்கள் சேர்", "en": "Add photographs"},
+    "video_h":   {"ta": "YouTube காணொளி", "en": "YouTube video"},
+    "video_ph":  {"ta": "YouTube இணைப்பை இங்கே ஒட்டவும்",
+                  "en": "Paste the YouTube link here"},
+    "video_add": {"ta": "காணொளி சேர்", "en": "Add video"},
+    "caption":   {"ta": "படக்குறிப்பு (விருப்பம்)", "en": "Caption (optional)"},
+    "remove":    {"ta": "நீக்கு", "en": "Remove"},
+    "publish":   {"ta": "வெளியிடு", "en": "Publish"},
+    "update":    {"ta": "மாற்றங்களை வெளியிடு", "en": "Publish changes"},
+    "cancel":    {"ta": "திருத்தத்தை விடு", "en": "Cancel editing"},
+    "clear":     {"ta": "அழித்துப் புதிதாகத் தொடங்கு", "en": "Clear and start again"},
+    "posts_h":   {"ta": "முந்தைய பதிவுகள்", "en": "Earlier posts"},
+    "posts_sub": {"ta": "இங்கிருந்து எழுதப்பட்ட பதிவுகள். திருத்தலாம், நீக்கலாம்.",
+                  "en": "Posts written from this desk. Each can be edited or withdrawn."},
+    "none":      {"ta": "இதுவரை பதிவுகள் இல்லை.", "en": "No posts yet."},
+    "edit":      {"ta": "திருத்து", "en": "Edit"},
+    "delete":    {"ta": "நீக்கு", "en": "Delete"},
+    "confirm":   {"ta": "உறுதியாக நீக்கவா?", "en": "Really delete?"},
+    "view":      {"ta": "பதிவைப் பார்", "en": "View the post"},
+    "photo_n":   {"ta": "படங்கள்", "en": "photographs"},
+    "s_loading":   {"ta": "ஏற்றப்படுகிறது", "en": "Loading"},
+    "s_uploading": {"ta": "படம் ஏற்றப்படுகிறது", "en": "Uploading photograph"},
+    "s_publishing": {"ta": "வெளியிடப்படுகிறது", "en": "Publishing"},
+    "s_saved":   {"ta": "பதிவு சேமிக்கப்பட்டது. சுமார் இரண்டு நிமிடங்களில் தளத்தில் "
+                        "தோன்றும்.",
+                  "en": "The post is saved. It will appear on the site in about two "
+                        "minutes."},
+    "s_live":    {"ta": "பதிவு இப்போது தளத்தில் உள்ளது.",
+                  "en": "The post is now on the site."},
+    "s_deleted": {"ta": "பதிவு நீக்கப்பட்டது. சில நிமிடங்களில் தளத்திலிருந்து மறையும்.",
+                  "en": "The post is withdrawn. It will leave the site in a few minutes."},
+    "s_draft":   {"ta": "முன்பு எழுதி வெளியிடாத வரைவு மீட்கப்பட்டுள்ளது.",
+                  "en": "The draft you had not published has been restored."},
+    "s_wait":    {"ta": "படங்கள் ஏறி முடியும் வரை காத்திருக்கவும்.",
+                  "en": "Wait for the photographs to finish uploading."},
+    "e_bad_login": {"ta": "பயனர் பெயர் அல்லது கடவுச்சொல் தவறு.",
+                    "en": "The username or password is wrong."},
+    "e_signed_out": {"ta": "மீண்டும் உள்நுழையவும். நீங்கள் எழுதியது அப்படியே உள்ளது.",
+                     "en": "Please sign in again. What you wrote has been kept."},
+    "e_no_title": {"ta": "தலைப்பு தேவை.", "en": "The post needs a title."},
+    "e_no_body": {"ta": "பதிவில் இன்னும் எதுவும் எழுதப்படவில்லை.",
+                  "en": "The post has nothing in it yet."},
+    "e_network": {"ta": "இணைய இணைப்பில் சிக்கல். மீண்டும் முயலவும்.",
+                  "en": "The connection failed. Please try again."},
+    "e_not_configured": {"ta": "இந்த வசதி இன்னும் அமைக்கப்படவில்லை. தள நிர்வாகியைத் "
+                               "தொடர்பு கொள்ளவும்.",
+                         "en": "This desk has not been set up yet. Please contact the "
+                               "site administrator."},
+    "e_too_many": {"ta": "மிக அதிக முயற்சிகள். ஒரு நிமிடம் கழித்து முயலவும்.",
+                   "en": "Too many attempts. Try again in a minute."},
+    "e_bad_video": {"ta": "இது YouTube இணைப்பாகத் தெரியவில்லை.",
+                    "en": "That does not look like a YouTube link."},
+    "e_bad_image": {"ta": "இந்தக் கோப்பைப் படமாகப் படிக்க முடியவில்லை.",
+                    "en": "That file could not be read as a photograph."},
+    "e_image_too_large": {"ta": "இந்தப் படம் மிகப் பெரியது.",
+                          "en": "That photograph is too large."},
+    "e_missing_image": {"ta": "ஒரு படம் சரியாக ஏறவில்லை. அதை நீக்கி மீண்டும் "
+                              "சேர்க்கவும்.",
+                        "en": "A photograph did not upload properly. Remove it and "
+                              "add it again."},
+    "e_not_found": {"ta": "அந்தப் பதிவு இப்போது இல்லை.",
+                    "en": "That post no longer exists."},
+    "e_storage_denied": {"ta": "சேமிக்க அனுமதி இல்லை. தள நிர்வாகியைத் தொடர்பு "
+                               "கொள்ளவும்.",
+                         "en": "Saving was refused. Please contact the site "
+                               "administrator."},
+    "e_server":  {"ta": "ஏதோ தவறு நேர்ந்தது. மீண்டும் முயலவும்.",
+                  "en": "Something went wrong. Please try again."},
+}
+
+
+def build_write(L):
+    def w(key):
+        return WRITE[key][L]
+
+    def field(name, key, kind="text", extra="", hint=""):
+        opt = (f' <span class="nd-write__opt">({w("optional")})</span>'
+               if name in ("subtitle", "tags") else "")
+        tip = f'<span class="cm-field__hint">{hint}</span>' if hint else ""
+        return (f'<div class="cm-field"><label class="cm-label" for="w-{name}">'
+                f'{w(key)}{opt}</label><input class="cm-input" id="w-{name}" '
+                f'name="{name}" type="{kind}" {extra}>{tip}</div>')
+
+    def tool(cmd, key, label=None, cls=""):
+        return (f'<button class="nd-write__tool{cls}" type="button" data-cmd="{cmd}" '
+                f'title="{w(key)}" aria-label="{w(key)}">{label or w(key)}</button>')
+
+    tools = (tool("p", "t_p") + tool("h2", "t_h2") + tool("h3", "t_h3")
+             + '<i class="nd-write__sep" aria-hidden="true"></i>'
+             + tool("bold", "t_bold", "<b>B</b>", " nd-write__tool--glyph")
+             + tool("italic", "t_italic", "<i>I</i>", " nd-write__tool--glyph")
+             + tool("link", "t_link")
+             + '<i class="nd-write__sep" aria-hidden="true"></i>'
+             + tool("quote", "t_quote") + tool("ul", "t_ul") + tool("ol", "t_ol"))
+
+    # Everything the script says, so that it carries no copy of its own.
+    strings = {k: v[L] for k, v in WRITE.items()}
+    strings.update({
+        "prefix": LANGS[L]["prefix"],
+        "icon_ok": icon("check", 18), "icon_info": icon("info", 18),
+        "icon_image": icon("image", 18),
+    })
+    blob = json.dumps(strings, ensure_ascii=False).replace("</", "<\\/")
+
+    trail = [(None, w("h1"))]
+    return head(
+        w("h1"), None, w("meta"), "/write/index.html", L, noindex=True,
+    ) + pagehead(U("writings", L), w("h1"), w("lede"), trail, L) + f"""
+<section class="nd-section nd-section--tight nd-write" data-write>
+  <div class="nd-shell">
+    <div class="nd-article">
+      <noscript><p class="cm-alert cm-alert--warning">{icon('info', 18)}
+        <span>{w("nojs")}</span></p></noscript>
+
+      <div class="cm-alert nd-write__status" role="status" aria-live="polite"
+           data-status hidden></div>
+
+      <form class="cm-card nd-write__card nd-write__login" data-login hidden novalidate>
+        <h2>{w("login_h")}</h2>
+        {field("username", "username", extra='autocomplete="username" autocapitalize="none" spellcheck="false" required')}
+        {field("password", "password", "password", 'autocomplete="current-password" required')}
+        <button class="cm-btn cm-btn--primary cm-btn--lg" type="submit">{w("signin")}</button>
+      </form>
+
+      <div data-desk hidden>
+        <form class="cm-card nd-write__card" data-editor novalidate>
+          <div class="nd-write__cardhead">
+            <h2 data-mode>{w("new_h")}</h2>
+            <button class="cm-btn cm-btn--ghost cm-btn--sm" type="button" data-signout>
+              {w("signout")}</button>
+          </div>
+          {field("title", "title", extra='maxlength="160" required')}
+          {field("subtitle", "subtitle", extra='maxlength="240"')}
+          <div class="nd-write__pair">
+            {field("author", "author", extra='maxlength="80" autocomplete="name"')}
+            {field("date", "date", "date")}
+          </div>
+          {field("tags", "tags", hint=w("tags_hint"))}
+
+          <div class="cm-field">
+            <span class="cm-label" id="w-body-label">{w("body")}</span>
+            <div class="nd-write__editor">
+              <div class="nd-write__tools" role="toolbar" aria-label="{w("body")}">{tools}</div>
+              <div class="nd-write__linkrow" data-linkrow hidden>
+                <label class="nd-sr" for="w-link">{w("link_ph")}</label>
+                <input class="cm-input" id="w-link" type="url" inputmode="url"
+                       placeholder="{w("link_ph")}" data-linkurl>
+                <button class="cm-btn cm-btn--secondary" type="button" data-linkadd>
+                  {w("link_add")}</button>
+              </div>
+              <div class="nd-write__body nd-prose" contenteditable="true" role="textbox"
+                   aria-multiline="true" aria-labelledby="w-body-label" data-body></div>
+            </div>
+            <span class="cm-field__hint">{w("body_hint")}</span>
+          </div>
+
+          <div class="nd-write__media">
+            <label class="cm-btn cm-btn--secondary nd-write__pick">
+              {icon('image', 18)} {w("photos")}
+              <input class="nd-sr" type="file" accept="image/*" multiple data-photos>
+            </label>
+            <div class="nd-write__videorow">
+              <label class="nd-sr" for="w-video">{w("video_h")}</label>
+              <input class="cm-input" id="w-video" type="url" inputmode="url"
+                     placeholder="{w("video_ph")}" data-videourl>
+              <button class="cm-btn cm-btn--secondary" type="button" data-videoadd>
+                {w("video_add")}</button>
+            </div>
+          </div>
+
+          <div class="nd-write__actions">
+            <button class="cm-btn cm-btn--primary cm-btn--lg" type="submit" data-publish>
+              {w("publish")}</button>
+            <button class="cm-btn cm-btn--secondary cm-btn--lg" type="button" data-cancel hidden>
+              {w("cancel")}</button>
+            <button class="cm-btn cm-btn--ghost" type="button" data-clear>
+              {w("clear")}</button>
+          </div>
+        </form>
+
+        <div class="nd-sechead nd-write__listhead">
+          <div><h2>{w("posts_h")}</h2><p>{w("posts_sub")}</p></div>
+        </div>
+        <ul class="nd-write__posts" data-posts></ul>
+      </div>
+    </div>
+  </div>
+</section>
+<script type="application/json" id="nd-write-strings">{blob}</script>
+<script src="{asset("/assets/js/write.js")}" defer></script>
+""" + footer(L)
+
+
+# ==========================================================================
 # Sitemap / robots
 # ==========================================================================
 
@@ -3406,6 +3859,10 @@ def build_robots():
 
 def main():
     posts = load("posts.json")
+    blog = load_blog()
+    # Newest first, as the archive already is. The sort is stable, so on a
+    # shared date a member post sits above the archive entry.
+    posts = sorted(blog + posts, key=lambda x: x["date"], reverse=True)
     names = load("names.json")
     all_moons = load("moons.json")["moons"]
     moons = [x for x in all_moons if x["date"] >= TODAY]
@@ -3425,7 +3882,8 @@ def main():
     # blocks, and the display copies of the photographs are written if missing.
     made = make_tiles(posts)
     for x in posts:
-        x["blocks"] = parse_body(x["html"])
+        if not x.get("member"):
+            x["blocks"] = parse_body(x["html"])
 
     try:
         pen = {x["slug"]: x for x in load("posts_en.json")}
@@ -3453,7 +3911,41 @@ def main():
         for x in posts:
             x[f"title_dup_{L}"] = seen[post_title(x, L)] > 1
 
+    # The deploy audit fails on a repeated <title> or description, and a
+    # writer can repeat either without knowing. Member posts that collide are
+    # told apart here so that publishing can never break the build.
+    for L in LANGS:
+        titles, descs = collections.Counter(), collections.Counter()
+
+        def final(x):
+            t = post_title(x, L)
+            if x.get(f"title_dup_{L}"):
+                t = f"{t} ({fmt_date(x['date'], L)})"
+            return title_trim(t), post_desc(x, L)
+
+        for x in posts:
+            if not x.get("member"):
+                t, d = final(x)
+                titles[t] += 1
+                descs[d] += 1
+        for x in reversed(posts):            # oldest first keeps the first one plain
+            if not x.get("member"):
+                continue
+            t, d = final(x)
+            when, n = fmt_date(x["date"], L), 1
+            while titles[t]:
+                n += 1
+                tail = f" ({when})" if n == 2 else f" ({when} · {n - 1})"
+                t = title_trim(post_title(x, L), 58 - len(tail)) + tail
+            if descs[d]:
+                d = excerpt(f"{post_title(x, L)} · {when} · {x['slug'][-6:]} · {d}", 165)
+            titles[t] += 1
+            descs[d] += 1
+            x[f"seo_title_{L}"], x[f"seo_desc_{L}"] = t, d
+
     print(f"Building Niladhamma (Canopy) · ta + en · today {TODAY} (IST)")
+    if blog:
+        print(f"  writers  {len(blog):2d} member post(s) from data/{BLOG_DIR}/")
     for cl, _d, _e, live, held in colls:
         line = f"  {cl['slug']:8s} {len(live):2d}/{len(live) + held} live"
         if held:
@@ -3517,8 +4009,10 @@ def main():
             urls.append((u(post_url(po), L), "yearly", "0.6"))
             n += 1
 
+        # Not in the sitemap: the desk is noindex and reached from the footer.
+        write(fpath("/write/index.html", L), build_write(L))
         write(fpath("/404.html", L), build_404(L))
-        print(f"  {LANGS[L]['name']:8s} {n + 1:4d} pages under {LANGS[L]['prefix'] or '/'}")
+        print(f"  {LANGS[L]['name']:8s} {n + 2:4d} pages under {LANGS[L]['prefix'] or '/'}")
 
     for L in LANGS:
         write(fpath("/niladhamma.ics", L), build_ics(moons, all_moons, L))
