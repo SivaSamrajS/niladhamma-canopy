@@ -309,9 +309,11 @@ async function commitOnce(message, entries) {
       if (e.upstream === 422 || e.upstream === 404) throw new Fail(409, 'tree', 'Tree refused');
       throw e;
     }
+    // No author is named, so GitHub records the owner of the token. Netlify
+    // only builds commits from a contributor it recognises, and a made-up
+    // "writers" identity is not one: the post would be saved and never appear.
     const made = await ghJson('POST', '/git/commits', {
       message, tree: tree.sha, parents: [ref.object.sha],
-      author: { name: 'Niladhamma writers', email: 'info@niladhamma.co.in' },
     });
     try {
       await ghJson('PATCH', `/git/refs/heads/${BRANCH()}`, { sha: made.sha, force: false });
